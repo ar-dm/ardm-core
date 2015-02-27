@@ -1,4 +1,6 @@
-share_examples_for 'An Adapter' do
+require 'rspec'
+
+RSpec.shared_examples_for 'An Adapter' do
 
   def self.adapter_supports?(*methods)
 
@@ -46,7 +48,7 @@ share_examples_for 'An Adapter' do
     end
   end
 
-  before :all do
+  before :each do
     raise '+#adapter+ should be defined in a let(:adapter) block' unless respond_to?(:adapter)
     raise '+#repository+ should be defined in a let(:repository) block' unless respond_to?(:repository)
 
@@ -83,13 +85,13 @@ share_examples_for 'An Adapter' do
 
   if adapter_supports?(:read)
     describe '#read' do
-      before :all do
+      before :each do
         @heffalump = heffalump_model.create(:color => 'brownish hue')
         @heffalump.should be_saved
         @query = heffalump_model.all.query
       end
 
-      after :all do
+      after :each do
         heffalump_model.destroy
       end
 
@@ -178,14 +180,14 @@ share_examples_for 'An Adapter' do
 
   if adapter_supports?(:read, :create)
     describe 'query matching' do
-      before :all do
+      before :each do
         @red  = heffalump_model.create(:color => 'red')
         @two  = heffalump_model.create(:num_spots => 2)
         @five = heffalump_model.create(:num_spots => 5)
         [ @red, @two, @five ].each { |resource| resource.should be_saved }
       end
 
-      after :all do
+      after :each do
         heffalump_model.destroy
       end
 

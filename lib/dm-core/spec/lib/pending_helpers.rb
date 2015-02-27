@@ -2,15 +2,16 @@ module DataMapper
   module Spec
     module PendingHelpers
 
-      def pending_if(*args)
+      def skip_if(*args)
         message, boolean = parse_args(*args)
 
         if boolean
-          pending(message) { yield }
+          skip(message) { yield }
         else
           yield
         end
       end
+      alias pending_if skip_if
 
       def rescue_if(*args)
         message, boolean = parse_args(*args)
