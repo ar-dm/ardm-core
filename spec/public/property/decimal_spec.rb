@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Decimal do
-  before :all do
+  before :each do
     @name          = :rate
     @type          = described_class
     @options       = { :precision => 5, :scale => 2 }
@@ -11,7 +11,7 @@ describe DataMapper::Property::Decimal do
     @invalid_value = true
   end
 
-  it_should_behave_like 'A public Property'
+  include_examples 'A public Property'
 
   describe '.options' do
     subject { described_class.options }

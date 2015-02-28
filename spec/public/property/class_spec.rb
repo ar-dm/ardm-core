@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Class do
-  before :all do
+  before :each do
     Object.send(:remove_const, :Foo) if defined?(Foo)
     Object.send(:remove_const, :Bar) if defined?(Bar)
 
@@ -16,7 +16,7 @@ describe DataMapper::Property::Class do
     @invalid_value = 1
   end
 
-  it_should_behave_like 'A public Property'
+  include_examples 'A public Property'
 
   describe '.options' do
     subject { described_class.options }

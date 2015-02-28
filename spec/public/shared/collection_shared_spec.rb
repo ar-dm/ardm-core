@@ -1,5 +1,5 @@
-share_examples_for 'A public Collection' do
-  before :all do
+RSpec.shared_examples_for 'A public Collection' do
+  before :each do
     %w[ @article_model @article @other @original @articles @other_articles ].each do |ivar|
       raise "+#{ivar}+ should be defined in before block" unless instance_variable_defined?(ivar)
       raise "+#{ivar}+ should not be nil in before block" unless instance_variable_get(ivar)
@@ -15,11 +15,7 @@ share_examples_for 'A public Collection' do
     @one_to_many  = @articles.kind_of?(DataMapper::Associations::OneToMany::Collection)
     @many_to_many = @articles.kind_of?(DataMapper::Associations::ManyToMany::Collection)
 
-    @skip = @no_join && @many_to_many
-  end
-
-  before do
-    pending if @skip
+    skip if @no_join && @many_to_many
   end
 
   subject { @articles }
@@ -27,7 +23,7 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:<<) }
 
   describe '#<<' do
-    before :all do
+    before :each do
       @resource = @article_model.new(:title => 'Title')
 
       @return = @articles << @resource
@@ -72,7 +68,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a dirty resource in the collection' do
-      before :all do
+      before :each do
         @articles.each { |r| r.content = 'Changed' }
       end
 
@@ -85,7 +81,7 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:clear) }
 
   describe '#clear' do
-    before :all do
+    before :each do
       @resources = @articles.entries
 
       @return = @articles.clear
@@ -108,7 +104,7 @@ share_examples_for 'A public Collection' do
     it { should respond_to(method) }
 
     describe "##{method}" do
-      before :all do
+      before :each do
         @resources = @articles.dup.entries
 
         @return = @articles.send(method) { |resource| @article_model.new(:title => 'Ignored Title', :content => 'New Content') }
@@ -134,7 +130,7 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:concat) }
 
   describe '#concat' do
-    before :all do
+    before :each do
       @return = @articles.concat(@other_articles)
     end
 
@@ -156,7 +152,7 @@ share_examples_for 'A public Collection' do
 
     describe "##{method}" do
       describe 'when scoped to a property' do
-        before :all do
+        before :each do
           @return = @resource = @articles.send(method)
         end
 
@@ -182,7 +178,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'when scoped to the key' do
-        before :all do
+        before :each do
           @articles = @articles.all(:id => 1)
 
           @return = @resource = @articles.send(method)
@@ -210,7 +206,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'when scoped to a property with multiple values' do
-        before :all do
+        before :each do
           @articles = @articles.all(:content => %w[ Sample Other ])
 
           @return = @resource = @articles.send(method)
@@ -238,7 +234,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'when scoped with a condition other than eql' do
-        before :all do
+        before :each do
           @articles = @articles.all(:content.not => 'Sample')
 
           @return = @resource = @articles.send(method)
@@ -309,7 +305,7 @@ share_examples_for 'A public Collection' do
 
   describe '#delete' do
     describe 'with a Resource within the Collection' do
-      before :all do
+      before :each do
         @return = @resource = @articles.delete(@article)
       end
 
@@ -329,7 +325,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a Resource not within the Collection' do
-      before :all do
+      before :each do
         @return = @articles.delete(@other)
       end
 
@@ -343,7 +339,7 @@ share_examples_for 'A public Collection' do
 
   describe '#delete_at' do
     describe 'with an offset within the Collection' do
-      before :all do
+      before :each do
         @return = @resource = @articles.delete_at(0)
       end
 
@@ -361,7 +357,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with an offset not within the Collection' do
-      before :all do
+      before :each do
         @return = @articles.delete_at(1)
       end
 
@@ -375,7 +371,7 @@ share_examples_for 'A public Collection' do
 
   describe '#delete_if' do
     describe 'with a block that matches a Resource in the Collection' do
-      before :all do
+      before :each do
         @resources = @articles.dup.entries
 
         @return = @articles.delete_if { true }
@@ -395,7 +391,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a block that does not match a Resource in the Collection' do
-      before :all do
+      before :each do
         @resources = @articles.dup.entries
 
         @return = @articles.delete_if { false }
@@ -420,7 +416,7 @@ share_examples_for 'A public Collection' do
 
     describe "##{method}" do
       describe 'on a normal collection' do
-        before :all do
+        before :each do
           @return = @articles.send(method)
         end
 
@@ -438,7 +434,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'on a limited collection' do
-        before :all do
+        before :each do
           @other   = @articles.create
           @limited = @articles.all(:limit => 1)
 
@@ -474,7 +470,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a dirty resource in the collection' do
-      before :all do
+      before :each do
         @articles.each { |r| r.content = 'Changed' }
       end
 
@@ -487,7 +483,7 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:insert) }
 
   describe '#insert' do
-    before :all do
+    before :each do
       @resources = @other_articles
 
       @return = @articles.insert(0, *@resources)
@@ -509,7 +505,7 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:inspect) }
 
   describe '#inspect' do
-    before :all do
+    before :each do
       @copy = @articles.dup
       @copy << @article_model.new(:title => 'Ignored Title', :content => 'Other Article')
 
@@ -568,7 +564,7 @@ share_examples_for 'A public Collection' do
 
   describe '#new' do
     describe 'when scoped to a property' do
-      before :all do
+      before :each do
         @source = @articles.new(:attachment => "A File")
         @return = @resource = @articles.new(:original => @source)
       end
@@ -595,7 +591,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'when scoped to the key' do
-      before :all do
+      before :each do
         @articles = @articles.all(:id => 1)
 
         @return = @resource = @articles.new
@@ -619,7 +615,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'when scoped to a property with multiple values' do
-      before :all do
+      before :each do
         @articles = @articles.all(:content => %w[ Sample Other ])
 
         @return = @resource = @articles.new
@@ -643,7 +639,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'when scoped with a condition other than eql' do
-      before :all do
+      before :each do
         @articles = @articles.all(:content.not => 'Sample')
 
         @return = @resource = @articles.new
@@ -670,12 +666,12 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:pop) }
 
   describe '#pop' do
-    before :all do
+    before :each do
       @new = @articles.create(:title => 'Sample Article')  # TODO: freeze @new
     end
 
     describe 'with no arguments' do
-      before :all do
+      before :each do
         @return = @articles.pop
       end
 
@@ -694,7 +690,7 @@ share_examples_for 'A public Collection' do
 
     if RUBY_VERSION >= '1.8.7'
       describe 'with a limit specified' do
-        before :all do
+        before :each do
           @return = @articles.pop(1)
         end
 
@@ -716,7 +712,7 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:push) }
 
   describe '#push' do
-    before :all do
+    before :each do
       @resources = [ @article_model.new(:title => 'Title 1'), @article_model.new(:title => 'Title 2') ]
 
       @return = @articles.push(*@resources)
@@ -739,7 +735,7 @@ share_examples_for 'A public Collection' do
 
   describe '#reject!' do
     describe 'with a block that matches a Resource in the Collection' do
-      before :all do
+      before :each do
         @resources = @articles.dup.entries
 
         @return = @articles.reject! { true }
@@ -759,7 +755,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a block that does not match a Resource in the Collection' do
-      before :all do
+      before :each do
         @resources = @articles.dup.entries
 
         @return = @articles.reject! { false }
@@ -779,14 +775,14 @@ share_examples_for 'A public Collection' do
 
   describe '#reload' do
     describe 'with no arguments' do
-      before :all do
+      before :each do
         @resources = @articles.dup.entries
 
         @return = @collection = @articles.reload
       end
 
       # FIXME: this is spec order dependent, move this into a helper method
-      # and execute in the before :all block
+      # and execute in the before :each block
       unless loaded
         it 'should not be a kicker' do
           pending do
@@ -811,14 +807,14 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a Hash query' do
-      before :all do
+      before :each do
         @resources = @articles.dup.entries
 
         @return = @collection = @articles.reload(:fields => [ :content ])  # :title is a default field
       end
 
       # FIXME: this is spec order dependent, move this into a helper method
-      # and execute in the before :all block
+      # and execute in the before :each block
       unless loaded
         it 'should not be a kicker' do
           pending do
@@ -843,14 +839,14 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a Query' do
-      before :all do
+      before :each do
         @query = DataMapper::Query.new(@repository, @article_model, :fields => [ :content ])  # :title is an original field
 
         @return = @collection = @articles.reload(@query)
       end
 
       # FIXME: this is spec order dependent, move this into a helper method
-      # and execute in the before :all block
+      # and execute in the before :each block
       unless loaded
         it 'should not be a kicker' do
           pending do
@@ -879,7 +875,7 @@ share_examples_for 'A public Collection' do
 
   describe '#replace' do
     describe 'when provided an Array of Resources' do
-      before :all do
+      before :each do
         @resources = @articles.dup.entries
 
         @return = @articles.replace(@other_articles)
@@ -899,7 +895,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'when provided an Array of Hashes' do
-      before :all do
+      before :each do
         @array = [ { :content => 'From Hash' } ].freeze
 
         @return = @articles.replace(@array)
@@ -930,7 +926,7 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:reverse!) }
 
   describe '#reverse!' do
-    before :all do
+    before :each do
       @query = @articles.query
 
       @new = @articles.create(:title => 'Sample Article')
@@ -960,7 +956,7 @@ share_examples_for 'A public Collection' do
 
     describe "##{method}" do
       describe 'when Resources are not saved' do
-        before :all do
+        before :each do
           @articles.new(:title => 'New Article', :content => 'New Article')
 
           @return = @articles.send(method)
@@ -976,7 +972,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'when Resources have been orphaned' do
-        before :all do
+        before :each do
           @resources = @articles.entries
           @articles.replace([])
 
@@ -994,7 +990,7 @@ share_examples_for 'A public Collection' do
 
   describe '#shift' do
     describe 'with no arguments' do
-      before :all do
+      before :each do
         @return = @articles.shift
       end
 
@@ -1013,7 +1009,7 @@ share_examples_for 'A public Collection' do
 
     if RUBY_VERSION >= '1.8.7'
       describe 'with a limit specified' do
-        before :all do
+        before :each do
           @return = @articles.shift(1)
         end
 
@@ -1036,17 +1032,15 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:slice!) }
 
   describe '#slice!' do
-    before :all do
+    before :each do
       1.upto(10) { |number| @articles.create(:content => "Article #{number}") }
 
       @copy = @articles.dup
     end
 
     describe 'with a positive offset' do
-      before :all do
-        unless @skip
-          @return = @resource = @articles.slice!(0)
-        end
+      before :each do
+        @return = @resource = @articles.slice!(0)
       end
 
       it 'should return a Resource' do
@@ -1067,10 +1061,8 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a positive offset and length' do
-      before :all do
-        unless @skip
-          @return = @resources = @articles.slice!(5, 5)
-        end
+      before :each do
+        @return = @resources = @articles.slice!(5, 5)
       end
 
       it 'should return a Collection' do
@@ -1091,10 +1083,8 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a positive range' do
-      before :all do
-        unless @skip
-          @return = @resources = @articles.slice!(5..10)
-        end
+      before :each do
+        @return = @resources = @articles.slice!(5..10)
       end
 
       it 'should return a Collection' do
@@ -1115,10 +1105,8 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a negative offset' do
-      before :all do
-        unless @skip
-          @return = @resource = @articles.slice!(-1)
-        end
+      before :each do
+        @return = @resource = @articles.slice!(-1)
       end
 
       it 'should return a Resource' do
@@ -1135,10 +1123,8 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a negative offset and length' do
-      before :all do
-        unless @skip
-          @return = @resources = @articles.slice!(-5, 5)
-        end
+      before :each do
+        @return = @resources = @articles.slice!(-5, 5)
       end
 
       it 'should return a Collection' do
@@ -1159,10 +1145,8 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a negative range' do
-      before :all do
-        unless @skip
-          @return = @resources = @articles.slice!(-3..-2)
-        end
+      before :each do
+        @return = @resources = @articles.slice!(-3..-2)
       end
 
       it 'should return a Collection' do
@@ -1183,10 +1167,8 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with an offset not within the Collection' do
-      before :all do
-        unless @skip
-          @return = @articles.slice!(12)
-        end
+      before :each do
+        @return = @articles.slice!(12)
       end
 
       it 'should return nil' do
@@ -1195,10 +1177,8 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with an offset and length not within the Collection' do
-      before :all do
-        unless @skip
-          @return = @articles.slice!(12, 1)
-        end
+      before :each do
+        @return = @articles.slice!(12, 1)
       end
 
       it 'should return nil' do
@@ -1207,10 +1187,8 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a range not within the Collection' do
-      before :all do
-        unless @skip
-          @return = @articles.slice!(12..13)
-        end
+      before :each do
+        @return = @articles.slice!(12..13)
       end
 
       it 'should return nil' do
@@ -1223,7 +1201,7 @@ share_examples_for 'A public Collection' do
 
   describe '#sort!' do
     describe 'without a block' do
-      before :all do
+      before :each do
         @return = @articles.unshift(@other).sort!
       end
 
@@ -1241,7 +1219,7 @@ share_examples_for 'A public Collection' do
     end
 
     describe 'with a block' do
-      before :all do
+      before :each do
         @return = @articles.unshift(@other).sort! { |a_resource, b_resource| b_resource.id <=> a_resource.id }
       end
 
@@ -1263,33 +1241,29 @@ share_examples_for 'A public Collection' do
     it { should respond_to(method) }
 
     describe "##{method}" do
-      before :all do
-        unless @skip
-          orphans = (1..10).map do |number|
-            articles = @articles.dup
-            articles.create(:content => "Article #{number}")
-            articles.pop  # remove the article from the tail
-          end
-
-          @articles.unshift(*orphans.first(5))
-          @articles.concat(orphans.last(5))
-
-          unless loaded
-            @articles.should_not be_loaded
-          end
-
-          @copy = @articles.dup
-          @new = @article_model.new(:content => 'New Article')
+      before :each do
+        orphans = (1..10).map do |number|
+          articles = @articles.dup
+          articles.create(:content => "Article #{number}")
+          articles.pop  # remove the article from the tail
         end
+
+        @articles.unshift(*orphans.first(5))
+        @articles.concat(orphans.last(5))
+
+        unless loaded
+          @articles.should_not be_loaded
+        end
+
+        @copy = @articles.dup
+        @new = @article_model.new(:content => 'New Article')
       end
 
       describe 'with a positive offset and a Resource' do
-        before :all do
-          rescue_if @skip do
-            @original = @copy[1]
+        before :each do
+          @original = @copy[1]
 
-            @return = @resource = @articles.send(method, 1, @new)
-          end
+          @return = @resource = @articles.send(method, 1, @new)
         end
 
         should_not_be_a_kicker
@@ -1312,12 +1286,10 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'with a positive offset and length and a Resource' do
-        before :all do
-          rescue_if @skip do
-            @original = @copy[2]
+        before :each do
+          @original = @copy[2]
 
-            @return = @resource = @articles.send(method, 2, 1, @new)
-          end
+          @return = @resource = @articles.send(method, 2, 1, @new)
         end
 
         should_not_be_a_kicker
@@ -1340,12 +1312,10 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'with a positive range and a Resource' do
-        before :all do
-          rescue_if @skip do
-            @originals = @copy.values_at(2..3)
+        before :each do
+          @originals = @copy.values_at(2..3)
 
-            @return = @resource = @articles.send(method, 2..3, @new)
-          end
+          @return = @resource = @articles.send(method, 2..3, @new)
         end
 
         should_not_be_a_kicker
@@ -1368,12 +1338,10 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'with a negative offset and a Resource' do
-        before :all do
-          rescue_if @skip do
-            @original = @copy[-1]
+        before :each do
+          @original = @copy[-1]
 
-            @return = @resource = @articles.send(method, -1, @new)
-          end
+          @return = @resource = @articles.send(method, -1, @new)
         end
 
         should_not_be_a_kicker
@@ -1396,12 +1364,10 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'with a negative offset and length and a Resource' do
-        before :all do
-          rescue_if @skip do
-            @original = @copy[-2]
+        before :each do
+          @original = @copy[-2]
 
-            @return = @resource = @articles.send(method, -2, 1, @new)
-          end
+          @return = @resource = @articles.send(method, -2, 1, @new)
         end
 
         should_not_be_a_kicker
@@ -1424,12 +1390,10 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'with a negative range and a Resource' do
-        before :all do
-          rescue_if @skip do
-            @originals = @articles.values_at(-3..-2)
+        before :each do
+          @originals = @articles.values_at(-3..-2)
 
-            @return = @resource = @articles.send(method, -3..-2, @new)
-          end
+          @return = @resource = @articles.send(method, -3..-2, @new)
         end
 
         should_not_be_a_kicker
@@ -1455,14 +1419,12 @@ share_examples_for 'A public Collection' do
 
   describe '#[]=' do
     describe 'when swapping resources' do
-      before :all do
-        rescue_if @skip do
-          @articles.create(:content => 'Another Article')
+      before :each do
+        @articles.create(:content => 'Another Article')
 
-          @entries = @articles.entries
+        @entries = @articles.entries
 
-          @articles[0], @articles[1] = @articles[1], @articles[0]
-        end
+        @articles[0], @articles[1] = @articles[1], @articles[0]
       end
 
       it 'should include the Resource in the Collection' do
@@ -1512,7 +1474,7 @@ share_examples_for 'A public Collection' do
   it { should respond_to(:unshift) }
 
   describe '#unshift' do
-    before :all do
+    before :each do
       @resources = [ @article_model.new(:title => 'Title 1'), @article_model.new(:title => 'Title 2') ]
 
       @return = @articles.unshift(*@resources)
@@ -1536,7 +1498,7 @@ share_examples_for 'A public Collection' do
 
     describe "##{method}" do
       describe 'with attributes' do
-        before :all do
+        before :each do
           @attributes = { :title => 'Updated Title' }
 
           @return = @articles.send(method, @attributes)
@@ -1561,7 +1523,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'with attributes where one is a parent association' do
-        before :all do
+        before :each do
           @attributes = { :original => @other }
 
           @return = @articles.send(method, @attributes)
@@ -1586,7 +1548,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'with attributes where a required property is nil' do
-        before :all do
+        before :each do
           @return = @articles.send(method, :title => nil)
         end
 
@@ -1600,7 +1562,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'on a limited collection' do
-        before :all do
+        before :each do
           @other      = @articles.create
           @limited    = @articles.all(:limit => 1)
           @attributes = { :content => 'Updated Content' }
@@ -1636,7 +1598,7 @@ share_examples_for 'A public Collection' do
       end
 
       describe 'on a dirty collection' do
-        before :all do
+        before :each do
           @articles.each { |r| r.content = 'Changed' }
         end
 
@@ -1655,7 +1617,7 @@ share_examples_for 'A public Collection' do
 
   describe '#method_missing' do
     describe 'with a public model method' do
-      before :all do
+      before :each do
         @return = @articles.model.base_model
       end
 

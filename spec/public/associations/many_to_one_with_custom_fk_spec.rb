@@ -29,7 +29,7 @@ describe 'Many to One Associations when foreign key is a property subclass' do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @zoo    = Zoo.create(:id => 'foo')
       @animal = @zoo.animals.create(:name => 'marty')
     end

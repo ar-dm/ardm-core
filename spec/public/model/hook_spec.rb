@@ -17,7 +17,7 @@ describe DataMapper::Model::Hook do
     DataMapper.finalize
   end
 
-  before :all do
+  before :each do
     @resource = ModelHookSpecs.new
   end
 

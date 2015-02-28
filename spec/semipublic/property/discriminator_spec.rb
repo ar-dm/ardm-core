@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Discriminator do
-  before :all do
+  before :each do
     Object.send(:remove_const, :Foo) if defined?(Foo)
     Object.send(:remove_const, :Bar) if defined?(Bar)
 
@@ -15,5 +15,5 @@ describe DataMapper::Property::Discriminator do
     @invalid_value = 1
   end
 
-  it_should_behave_like 'A semipublic Property'
+  include_examples 'A semipublic Property'
 end

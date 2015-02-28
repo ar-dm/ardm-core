@@ -88,7 +88,7 @@ describe DataMapper::Resource::PersistenceState::Dirty do
         @resource.children = [ @resource.parent = @resource ]
       end
 
-      it_should_behave_like 'It resets resource state'
+      include_examples 'It resets resource state'
 
       it 'should return a Deleted state' do
         should eql(DataMapper::Resource::PersistenceState::Deleted.new(@resource))
@@ -101,7 +101,7 @@ describe DataMapper::Resource::PersistenceState::Dirty do
       @loaded_value = 'John Doe'
     end
 
-    it_should_behave_like 'Resource::PersistenceState::Persisted#get'
+    include_examples 'Resource::PersistenceState::Persisted#get'
   end
 
   describe '#rollback' do
@@ -112,7 +112,7 @@ describe DataMapper::Resource::PersistenceState::Dirty do
         @resource.children = [ @resource.parent = @resource ]
       end
 
-      it_should_behave_like 'It resets resource state'
+      include_examples 'It resets resource state'
 
       it 'should return a Clean state' do
         should eql(DataMapper::Resource::PersistenceState::Clean.new(@resource))
@@ -130,7 +130,7 @@ describe DataMapper::Resource::PersistenceState::Dirty do
           @value = @key.get!(@resource)
         end
 
-        it_should_behave_like 'A method that delegates to the superclass #set'
+        include_examples 'A method that delegates to the superclass #set'
 
         it 'should return a Dirty state' do
           should equal(@state)
@@ -145,7 +145,7 @@ describe DataMapper::Resource::PersistenceState::Dirty do
           @value = 'Dan Kubb'
         end
 
-        it_should_behave_like 'A method that delegates to the superclass #set'
+        include_examples 'A method that delegates to the superclass #set'
 
         it 'should return a Clean state' do
           should eql(DataMapper::Resource::PersistenceState::Clean.new(@resource))

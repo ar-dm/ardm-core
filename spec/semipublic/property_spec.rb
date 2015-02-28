@@ -22,7 +22,7 @@ describe DataMapper::Property do
     end
 
     describe "with property subclasses" do
-      before :all do
+      before :each do
         Object.send(:remove_const, :CustomProps) if Object.const_defined?(:CustomProps)
 
         module ::CustomProps
@@ -70,7 +70,7 @@ describe DataMapper::Property do
     end
   end
 
-  before :all do
+  before :each do
     module ::Blog
       class Author
         include DataMapper::Resource
@@ -93,7 +93,7 @@ describe DataMapper::Property do
   end
 
   describe 'override property definition in other repository' do
-    before :all do
+    before :each do
       module ::Blog
         class Author
           repository(:other) do

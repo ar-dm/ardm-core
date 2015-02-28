@@ -68,7 +68,7 @@ describe 'One to One Associations' do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       comment = @comment_model.create(:body => 'Cool spec')
       user    = @user_model.create(:name => 'dbussink', :age => 25, :description => 'Test', :comment => comment)
 
@@ -76,8 +76,8 @@ describe 'One to One Associations' do
       @user    = @comment.user
     end
 
-    it_should_behave_like 'A public Resource'
-    it_should_behave_like 'A Resource supporting Strategic Eager Loading'
+    include_examples 'A public Resource'
+    include_examples 'A Resource supporting Strategic Eager Loading'
   end
 end
 
@@ -160,7 +160,7 @@ describe 'One to One Through Associations' do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       comment = @comment_model.create(:body => 'Cool spec')
       user    = @user_model.create(:name => 'dbussink', :age => 25, :description => 'Test', :comment => comment)
 
@@ -168,9 +168,9 @@ describe 'One to One Through Associations' do
       @user    = @comment.user
     end
 
-    it_should_behave_like 'A public Resource'
+    include_examples 'A public Resource'
 
     # TODO: make this pass
-    #it_should_behave_like 'A Resource supporting Strategic Eager Loading'
+    #include_examples 'A Resource supporting Strategic Eager Loading'
   end
 end

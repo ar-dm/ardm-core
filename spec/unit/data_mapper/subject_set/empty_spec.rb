@@ -19,13 +19,13 @@ describe 'DataMapper::SubjectSet#empty?' do
   context 'with no entries in it' do
     let(:set) { DataMapper::SubjectSet.new }
 
-    it_should_behave_like 'DataMapper::SubjectSet#empty? with no entries in it'
+    include_examples 'DataMapper::SubjectSet#empty? with no entries in it'
   end
 
   context 'with entries in it' do
     let(:set)   { DataMapper::SubjectSet.new([ entry ]) }
     let(:entry) { Person.new('Alice')                   }
 
-    it_should_behave_like 'DataMapper::SubjectSet#empty? with entries in it'
+    include_examples 'DataMapper::SubjectSet#empty? with entries in it'
   end
 end

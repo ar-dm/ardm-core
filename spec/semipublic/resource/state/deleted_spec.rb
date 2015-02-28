@@ -58,7 +58,7 @@ describe DataMapper::Resource::PersistenceState::Deleted do
   end
 
   describe '#get' do
-    it_should_behave_like 'Resource::PersistenceState::Persisted#get'
+    include_examples 'Resource::PersistenceState::Persisted#get'
   end
 
   describe '#set' do

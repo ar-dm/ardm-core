@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Serial do
-  before :all do
+  before :each do
     @name          = :id
     @type          = described_class
     @value         = 1
@@ -9,5 +9,5 @@ describe DataMapper::Property::Serial do
     @invalid_value = 'foo'
   end
 
-  it_should_behave_like 'A semipublic Property'
+  include_examples 'A semipublic Property'
 end

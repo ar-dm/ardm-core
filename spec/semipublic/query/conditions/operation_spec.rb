@@ -37,7 +37,7 @@ module OperationMatchers
 end
 
 shared_examples_for 'DataMapper::Query::Conditions::AbstractOperation' do
-  before :all do
+  before :each do
     module ::Blog
       class Article
         include DataMapper::Resource
@@ -491,7 +491,7 @@ end
 describe DataMapper::Query::Conditions::AndOperation do
   include OperationMatchers
 
-  it_should_behave_like 'DataMapper::Query::Conditions::AbstractOperation'
+  include_examples 'DataMapper::Query::Conditions::AbstractOperation'
 
   before do
     @operation = @and_operation
@@ -742,7 +742,7 @@ end
 describe DataMapper::Query::Conditions::OrOperation do
   include OperationMatchers
 
-  it_should_behave_like 'DataMapper::Query::Conditions::AbstractOperation'
+  include_examples 'DataMapper::Query::Conditions::AbstractOperation'
 
   before do
     @operation = @or_operation
@@ -964,7 +964,7 @@ end
 describe DataMapper::Query::Conditions::NotOperation do
   include OperationMatchers
 
-  it_should_behave_like 'DataMapper::Query::Conditions::AbstractOperation'
+  include_examples 'DataMapper::Query::Conditions::AbstractOperation'
 
   before do
     @operation = @not_operation

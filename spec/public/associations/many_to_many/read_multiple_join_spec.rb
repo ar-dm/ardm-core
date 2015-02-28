@@ -42,22 +42,18 @@ describe 'Many to Many Associations read across multiple join associations' do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @user = User.create
       @sale = @user.sales.create
 
       5.times { @sale.items.create }
     end
 
-    before :all do
+    before :each do
       @no_join = defined?(DataMapper::Adapters::InMemoryAdapter) && @adapter.kind_of?(DataMapper::Adapters::InMemoryAdapter) ||
                  defined?(DataMapper::Adapters::YamlAdapter)     && @adapter.kind_of?(DataMapper::Adapters::YamlAdapter)
 
-      @skip = @no_join
-    end
-
-    before do
-      pending if @skip
+      skip if @no_join
     end
 
     it 'should return all the created entries' do

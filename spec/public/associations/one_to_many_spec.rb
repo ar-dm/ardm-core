@@ -53,7 +53,7 @@ require 'spec_helper'
     end
 
     supported_by :all do
-      before :all do
+      before :each do
         @author  = @author_model.create(:name => 'Dan Kubb')
 
         @original = @author.articles.create(:title => 'Original Article')
@@ -71,11 +71,11 @@ require 'spec_helper'
         @articles.entries if loaded
       end
 
-      it_should_behave_like 'A public Collection'
-      it_should_behave_like 'A public Association Collection'
-      it_should_behave_like 'A Collection supporting Strategic Eager Loading'
-      it_should_behave_like 'Finder Interface'
-      it_should_behave_like 'Collection Finder Interface'
+      include_examples 'A public Collection'
+      include_examples 'A public Association Collection'
+      include_examples 'A Collection supporting Strategic Eager Loading'
+      include_examples 'Finder Interface'
+      include_examples 'Collection Finder Interface'
     end
   end
 end

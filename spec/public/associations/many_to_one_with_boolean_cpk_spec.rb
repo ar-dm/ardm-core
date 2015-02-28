@@ -24,7 +24,7 @@ describe 'Many to One Associations when foreign key is part of a composite key, 
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @one  = OneModel.create(:integer_key => 1)
       @many = ManyModel.create(:integer_key => 1, :boolean_key => false)
     end

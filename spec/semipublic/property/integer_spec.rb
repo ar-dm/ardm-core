@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Integer do
-  before :all do
+  before :each do
     @name          = :age
     @type          = described_class
     @value         = 1
@@ -9,7 +9,7 @@ describe DataMapper::Property::Integer do
     @invalid_value = '1'
   end
 
-  it_should_behave_like 'A semipublic Property'
+  include_examples 'A semipublic Property'
 
   describe '#typecast_to_primitive' do
     it 'returns same value if an integer' do

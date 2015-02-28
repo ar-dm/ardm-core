@@ -25,7 +25,9 @@ describe 'One to Many Associations' do
     @author_model  = Blog::Author
 
     DataMapper.finalize
+  end
 
+  before :each do
     n = @article_model.n
 
     @default_value          = [ @author_model.new(:name => 'Dan Kubb') ]
@@ -39,7 +41,7 @@ describe 'One to Many Associations' do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @default_value.each { |resource| resource.save }
       @default_value_callable.each { |resource| resource.save }
     end
@@ -49,7 +51,7 @@ describe 'One to Many Associations' do
         @resource = @article_model.new(:title => 'DataMapper Rocks!', :body => 'TSIA')
       end
 
-      it_should_behave_like 'A semipublic Subject'
+      include_examples 'A semipublic Subject'
     end
   end
 end

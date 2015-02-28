@@ -15,12 +15,12 @@ describe 'DataMapper::OrderedSet#<<' do
   context 'when appending a not yet included entry' do
     let(:entry2) { Object.new }
 
-    it_should_behave_like 'DataMapper::OrderedSet#<< when appending a not yet included entry'
+    include_examples 'DataMapper::OrderedSet#<< when appending a not yet included entry'
   end
 
   context 'when updating an already included entry' do
     let(:entry2) { entry1 }
 
-    it_should_behave_like 'DataMapper::OrderedSet#<< when updating an already included entry'
+    include_examples 'DataMapper::OrderedSet#<< when updating an already included entry'
   end
 end

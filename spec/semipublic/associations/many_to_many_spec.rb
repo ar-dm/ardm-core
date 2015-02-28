@@ -69,7 +69,7 @@ describe 'Many to Many Associations' do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @no_join = defined?(DataMapper::Adapters::InMemoryAdapter) && @adapter.kind_of?(DataMapper::Adapters::InMemoryAdapter) ||
                  defined?(DataMapper::Adapters::YamlAdapter)     && @adapter.kind_of?(DataMapper::Adapters::YamlAdapter)
     end
@@ -78,7 +78,7 @@ describe 'Many to Many Associations' do
       pending if @no_join
     end
 
-    before :all do
+    before :each do
       @default_value.each { |resource| resource.save }
       @default_value_callable.each { |resource| resource.save }
     end
@@ -88,7 +88,7 @@ describe 'Many to Many Associations' do
         @resource = @article_model.new(:title => 'DataMapper Rocks!', :body => 'TSIA')
       end
 
-      it_should_behave_like 'A semipublic Subject'
+      include_examples 'A semipublic Subject'
     end
   end
 end

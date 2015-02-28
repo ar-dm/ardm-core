@@ -1,4 +1,4 @@
-share_examples_for 'A method that delegates to the superclass #set' do
+RSpec.shared_examples_for 'A method that delegates to the superclass #set' do
   it 'should delegate to the superclass' do
     # this is the only way I could think of to test if the
     # superclass method is being called
@@ -8,7 +8,7 @@ share_examples_for 'A method that delegates to the superclass #set' do
   end
 end
 
-share_examples_for 'A method that does not delegate to the superclass #set' do
+RSpec.shared_examples_for 'A method that does not delegate to the superclass #set' do
   it 'should delegate to the superclass' do
     # this is the only way I could think of to test if the
     # superclass method is not being called
@@ -18,25 +18,25 @@ share_examples_for 'A method that does not delegate to the superclass #set' do
   end
 end
 
-share_examples_for 'It resets resource state' do
+RSpec.shared_examples_for 'It resets resource state' do
   it 'should reset the dirty property' do
-    method(:subject).should change(@resource, :name).from('John Doe').to('Dan Kubb')
+    expect { subject }.to change(@resource, :name).from('John Doe').to('Dan Kubb')
   end
 
   it 'should reset the dirty m:1 relationship' do
-    method(:subject).should change(@resource, :parent).from(@resource).to(nil)
+    expect { subject }.to change(@resource, :parent).from(@resource).to(nil)
   end
 
   it 'should reset the dirty 1:m relationship' do
-    method(:subject).should change(@resource, :children).from([ @resource ]).to([])
+    expect { subject }.to change(@resource, :children).from([ @resource ]).to([])
   end
 
   it 'should clear original attributes' do
-    method(:subject).should change { @resource.original_attributes.dup }.to({})
+    expect { subject }.to change { @resource.original_attributes.dup }.to({})
   end
 end
 
-share_examples_for 'Resource::PersistenceState::Persisted#get' do
+RSpec.shared_examples_for 'Resource::PersistenceState::Persisted#get' do
   subject { @state.get(@key) }
 
   supported_by :all do

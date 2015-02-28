@@ -17,12 +17,12 @@ describe 'DataMapper::OrderedSet#delete' do
   context 'when deleting an already included entry' do
     let(:entry) { entry1 }
 
-    it_should_behave_like 'DataMapper::OrderedSet#delete when deleting an already included entry'
+    include_examples 'DataMapper::OrderedSet#delete when deleting an already included entry'
   end
 
   context 'when deleting a not yet included entry' do
     let(:entry) { 4 }
 
-    it_should_behave_like 'DataMapper::OrderedSet#delete when deleting a not yet included entry'
+    include_examples 'DataMapper::OrderedSet#delete when deleting a not yet included entry'
   end
 end

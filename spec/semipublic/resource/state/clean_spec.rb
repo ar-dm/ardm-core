@@ -51,7 +51,7 @@ describe DataMapper::Resource::PersistenceState::Clean do
   end
 
   describe '#get' do
-    it_should_behave_like 'Resource::PersistenceState::Persisted#get'
+    include_examples 'Resource::PersistenceState::Persisted#get'
   end
 
   describe '#set' do
@@ -64,7 +64,7 @@ describe DataMapper::Resource::PersistenceState::Clean do
           @value = nil
         end
 
-        it_should_behave_like 'A method that delegates to the superclass #set'
+        include_examples 'A method that delegates to the superclass #set'
 
         it 'should return a Dirty state' do
           should eql(DataMapper::Resource::PersistenceState::Dirty.new(@resource))
@@ -77,7 +77,7 @@ describe DataMapper::Resource::PersistenceState::Clean do
           @value = 'Dan Kubb'
         end
 
-        it_should_behave_like 'A method that does not delegate to the superclass #set'
+        include_examples 'A method that does not delegate to the superclass #set'
 
         it 'should return a Clean state' do
           should equal(@state)

@@ -5,7 +5,7 @@ require 'unit/data_mapper/subject_set/shared/each_spec'
 describe 'DataMapper::SubjectSet' do
   subject { DataMapper::SubjectSet.new }
 
-  it_should_behave_like 'DataMapper::SubjectSet'
+  include_examples 'DataMapper::SubjectSet'
 end
 
 describe 'DataMapper::SubjectSet#each' do
@@ -26,5 +26,5 @@ describe 'DataMapper::SubjectSet#each' do
   let(:entry)  { Person.new('Alice')                   }
   let(:yields) { []                                    }
 
-  it_should_behave_like 'DataMapper::SubjectSet#each'
+  include_examples 'DataMapper::SubjectSet#each'
 end

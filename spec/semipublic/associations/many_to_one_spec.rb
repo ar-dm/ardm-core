@@ -24,7 +24,9 @@ describe 'Many to One Associations' do
     @comment_model = Comment
 
     DataMapper.finalize
+  end
 
+  before :each do
     @default_value          = @user_model.new(:name => 'dkubb', :age => 34, :description => 'Test')
     @default_value_callable = @user_model.new(:name => 'jdoe',  :age => 21, :description => 'Test')
 
@@ -39,25 +41,25 @@ describe 'Many to One Associations' do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @default_value.save
       @default_value_callable.save
     end
 
-    before :all do
+    before :each do
       comment = @comment_model.create(:user => { :name => 'dbussink', :age => 25, :description => 'Test' })
 
       @user = @comment_model.get(*comment.key).user
     end
 
-    it_should_behave_like 'A semipublic Resource'
+    include_examples 'A semipublic Resource'
 
     describe 'acts like a subject' do
       before do
         @resource = @user_model.new(:name => 'A subject')
       end
 
-      it_should_behave_like 'A semipublic Subject'
+      include_examples 'A semipublic Subject'
     end
   end
 end

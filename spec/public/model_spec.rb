@@ -24,7 +24,7 @@ describe DataMapper::Model do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @author = 'Dan Kubb'
 
       @original = @article_model.create(:title => 'Original Article',                         :author => @author)
@@ -36,7 +36,7 @@ describe DataMapper::Model do
 
     describe '#copy' do
       with_alternate_adapter do
-        before :all do
+        before :each do
           if @article_model.respond_to?(:auto_migrate!)
             # force the article model to be available in the alternate repository
             @article_model.auto_migrate!(@adapter.name)
@@ -44,7 +44,7 @@ describe DataMapper::Model do
         end
 
         describe 'between identical models' do
-          before :all do
+          before :each do
             @return = @resources = @article_model.copy(@repository.name, @adapter.name)
           end
 
@@ -66,7 +66,7 @@ describe DataMapper::Model do
         end
 
         describe 'between different models' do
-          before :all do
+          before :each do
             @other.destroy
             @article.destroy
             @original.destroy
@@ -161,7 +161,7 @@ describe DataMapper::Model do
 
     def model?; true end
 
-    before :all do
+    before :each do
       @articles = @article_model
 
       @original = @articles.create(:title => 'Original Article')
@@ -302,7 +302,7 @@ describe DataMapper::Model do
       end
     end
 
-    it_should_behave_like 'Finder Interface'
+    include_examples 'Finder Interface'
 
     it 'DataMapper::Model should respond to raise_on_save_failure' do
       DataMapper::Model.should respond_to(:raise_on_save_failure)

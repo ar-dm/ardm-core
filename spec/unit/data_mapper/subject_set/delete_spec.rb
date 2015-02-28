@@ -29,12 +29,12 @@ describe 'DataMapper::SubjectSet#delete' do
   context 'when deleting an already included entry' do
     let(:entry) { entry1 }
 
-    it_should_behave_like 'DataMapper::SubjectSet#delete when deleting an already included entry'
+    include_examples 'DataMapper::SubjectSet#delete when deleting an already included entry'
   end
 
   context 'when deleting a not yet included entry' do
     let(:entry) { Person.new('Bob') }
 
-    it_should_behave_like 'DataMapper::SubjectSet#delete when deleting a not yet included entry'
+    include_examples 'DataMapper::SubjectSet#delete when deleting a not yet included entry'
   end
 end

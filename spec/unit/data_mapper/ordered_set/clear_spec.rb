@@ -13,12 +13,12 @@ describe 'DataMapper::OrderedSet#clear' do
   context 'when no entries are present' do
     let(:entries) { [] }
 
-    it_should_behave_like 'DataMapper::OrderedSet#clear when no entries are present'
+    include_examples 'DataMapper::OrderedSet#clear when no entries are present'
   end
 
   context 'when entries are present' do
     let(:entries) { [ entry1, entry2 ] }
 
-    it_should_behave_like 'DataMapper::OrderedSet#clear when entries are present'
+    include_examples 'DataMapper::OrderedSet#clear when entries are present'
   end
 end

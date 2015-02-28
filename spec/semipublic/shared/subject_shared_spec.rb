@@ -1,4 +1,4 @@
-share_examples_for 'A semipublic Subject' do
+RSpec.shared_examples_for 'A semipublic Subject' do
   describe '#default?' do
     describe 'with a default' do
       subject { @subject_with_default.default? }

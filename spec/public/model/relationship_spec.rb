@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-share_examples_for 'it creates a one accessor' do
+RSpec.shared_examples_for 'it creates a one accessor' do
   describe 'accessor' do
     describe 'when there is no associated resource' do
       describe 'without a query' do
-        before :all do
+        before :each do
           @return = @car.__send__(@name)
         end
 
@@ -14,7 +14,7 @@ share_examples_for 'it creates a one accessor' do
       end
 
       describe 'with a query' do
-        before :all do
+        before :each do
           @return = @car.__send__(@name, :id => 99)
         end
 
@@ -25,13 +25,13 @@ share_examples_for 'it creates a one accessor' do
     end
 
     describe 'when there is an associated resource' do
-      before :all do
+      before :each do
         @expected = @model.new
         @car.__send__("#{@name}=", @expected)
       end
 
       describe 'without a query' do
-        before :all do
+        before :each do
           @return = @car.__send__(@name)
         end
 
@@ -45,7 +45,7 @@ share_examples_for 'it creates a one accessor' do
       end
 
       describe 'with a query' do
-        before :all do
+        before :each do
           @car.save  # save @car and @expected to set @expected.id
 
           @expected.id.should_not be_nil
@@ -64,7 +64,7 @@ share_examples_for 'it creates a one accessor' do
     end
 
     describe 'when the target model is scoped' do
-      before :all do
+      before :each do
         @resource = @model.new
         @car.__send__("#{@name}=", @resource)
         @car.save
@@ -82,10 +82,10 @@ share_examples_for 'it creates a one accessor' do
   end
 end
 
-share_examples_for 'it creates a one mutator' do
+RSpec.shared_examples_for 'it creates a one mutator' do
   describe 'mutator' do
     describe 'when setting a Resource' do
-      before :all do
+      before :each do
         @expected = @model.new
 
         @return = @car.__send__("#{@name}=", @expected)
@@ -122,7 +122,7 @@ share_examples_for 'it creates a one mutator' do
     end
 
     describe 'when setting a Hash' do
-      before :all do
+      before :each do
         @car.__send__("#{@name}=", @model.new)
 
         attributes = { :id => 10 }
@@ -162,7 +162,7 @@ share_examples_for 'it creates a one mutator' do
     end
 
     describe 'when setting nil' do
-      before :all do
+      before :each do
         @car.__send__("#{@name}=", @model.new)
 
         @return = @car.__send__("#{@name}=", nil)
@@ -183,7 +183,7 @@ share_examples_for 'it creates a one mutator' do
     end
 
     describe 'when changing the Resource' do
-      before :all do
+      before :each do
         @car.__send__("#{@name}=", @model.new)
         @expected = @model.new
 
@@ -222,10 +222,10 @@ share_examples_for 'it creates a one mutator' do
   end
 end
 
-share_examples_for 'it creates a many accessor' do
+RSpec.shared_examples_for 'it creates a many accessor' do
   describe 'accessor' do
     describe 'when there is no child resource and the source is saved' do
-      before :all do
+      before :each do
         @car.save.should be(true)
         @return = @car.__send__(@name)
       end
@@ -240,7 +240,7 @@ share_examples_for 'it creates a many accessor' do
     end
 
     describe 'when there is no child resource and the source is not saved' do
-      before :all do
+      before :each do
         @return = @car.__send__(@name)
       end
 
@@ -254,7 +254,7 @@ share_examples_for 'it creates a many accessor' do
     end
 
     describe 'when there is a child resource' do
-      before :all do
+      before :each do
         @return = nil
 
         @expected = @model.new
@@ -273,7 +273,7 @@ share_examples_for 'it creates a many accessor' do
     end
 
     describe 'when the target model is scoped' do
-      before :all do
+      before :each do
         2.times { @car.__send__(@name).new }
         @car.save
 
@@ -299,10 +299,10 @@ share_examples_for 'it creates a many accessor' do
   end
 end
 
-share_examples_for 'it creates a many mutator' do
+RSpec.shared_examples_for 'it creates a many mutator' do
   describe 'mutator' do
     describe 'when setting an Array of Resources' do
-      before :all do
+      before :each do
         @expected = [ @model.new ]
 
         @return = @car.__send__("#{@name}=", @expected)
@@ -336,7 +336,7 @@ share_examples_for 'it creates a many mutator' do
     end
 
     describe 'when setting an Array of Hashes' do
-      before :all do
+      before :each do
         attributes = { :id => 11 }
         @hashes    = [ attributes             ]
         @expected  = [ @model.new(attributes) ]
@@ -371,7 +371,7 @@ share_examples_for 'it creates a many mutator' do
     end
 
     describe 'when setting an empty collection' do
-      before :all do
+      before :each do
         @car.__send__("#{@name}=", [ @model.new ])
 
         @return = @car.__send__("#{@name}=", [])
@@ -392,7 +392,7 @@ share_examples_for 'it creates a many mutator' do
     end
 
     describe 'when changing an associated collection' do
-      before :all do
+      before :each do
         @car.__send__("#{@name}=", [ @model.new ])
 
         @expected = [ @model.new ]
@@ -464,7 +464,7 @@ describe DataMapper::Associations do
   it { Engine.should respond_to(:belongs_to) }
 
   describe '#belongs_to' do
-    before :all do
+    before :each do
       @model = Engine
       @name  = :engine
 
@@ -474,20 +474,20 @@ describe DataMapper::Associations do
     end
 
     supported_by :all do
-      before :all do
+      before :each do
         @car = Car.new
       end
 
       it { @car.should respond_to(@name) }
 
-      it_should_behave_like 'it creates a one accessor'
+      include_examples 'it creates a one accessor'
 
       it { @car.should respond_to("#{@name}=") }
 
-      it_should_behave_like 'it creates a one mutator'
+      include_examples 'it creates a one mutator'
 
       describe 'with a :key option' do
-        before :all do
+        before :each do
           @relationship = Car.belongs_to("#{@name}_with_key".to_sym, @model, :required => false, :key => true)
           DataMapper.finalize
         end
@@ -502,7 +502,7 @@ describe DataMapper::Associations do
       describe 'with a :unique option' do
         let(:unique) { [ :one, :two, :three ] }
 
-        before :all do
+        before :each do
           @relationship = Car.belongs_to("#{@name}_with_unique".to_sym, @model, :unique => unique)
           DataMapper.finalize
         end
@@ -523,7 +523,7 @@ describe DataMapper::Associations do
 
     # TODO: refactor these specs into above structure once they pass
     describe 'pending query specs' do
-      before :all do
+      before :each do
         Car.has(1, :engine)
         Engine.belongs_to(:car)
         DataMapper.finalize
@@ -531,7 +531,7 @@ describe DataMapper::Associations do
 
       supported_by :all do
         describe 'querying for a parent resource when only the foreign key is set' do
-          before :all do
+          before :each do
             # create a car that would be returned if the query is not
             # scoped properly to retrieve @car
             Car.create
@@ -552,7 +552,7 @@ describe DataMapper::Associations do
         end
 
         describe 'querying for a parent resource' do
-          before :all do
+          before :each do
             @car = Car.create
             @engine = Engine.create(:car => @car)
             @resource = @engine.car(:id => @car.id)
@@ -568,7 +568,7 @@ describe DataMapper::Associations do
         end
 
         describe 'querying for a parent resource that does not exist' do
-          before :all do
+          before :each do
             @car = Car.create
             @engine = Engine.create(:car => @car)
             @resource = @engine.car(:id.not => @car.id)
@@ -580,7 +580,7 @@ describe DataMapper::Associations do
         end
 
         describe 'changing the parent resource' do
-          before :all do
+          before :each do
             @car = Car.create
             @engine = Engine.new
             @engine.car = @car
@@ -598,7 +598,7 @@ describe DataMapper::Associations do
         end
 
         describe 'changing the parent foreign key' do
-          before :all do
+          before :each do
             @car = Car.create
 
             @engine = Engine.new(:car_id => @car.id)
@@ -610,7 +610,7 @@ describe DataMapper::Associations do
         end
 
         describe 'changing an existing resource through the relation' do
-          before :all do
+          before :each do
             @car1 = Car.create
             @car2 = Car.create
             @engine = Engine.create(:car => @car1)
@@ -629,7 +629,7 @@ describe DataMapper::Associations do
         end
 
         describe 'changing an existing resource through the relation' do
-          before :all do
+          before :each do
             @car1 = Car.create
             @car2 = Car.create
             @engine = Engine.create(:car => @car1)
@@ -650,7 +650,7 @@ describe DataMapper::Associations do
     end
 
     describe 'with a model' do
-      before :all do
+      before :each do
         Engine.belongs_to(:vehicle, Car)
         DataMapper.finalize
       end
@@ -661,7 +661,7 @@ describe DataMapper::Associations do
     end
 
     describe 'with a :model option' do
-      before :all do
+      before :each do
         Engine.belongs_to(:vehicle, :model => Car)
         DataMapper.finalize
       end
@@ -672,7 +672,7 @@ describe DataMapper::Associations do
     end
 
     describe 'with a single element as :child_key option' do
-      before :all do
+      before :each do
         Engine.belongs_to(:vehicle, :model => Car, :child_key => :bike_id)
         DataMapper.finalize
       end
@@ -683,7 +683,7 @@ describe DataMapper::Associations do
     end
 
     describe 'with an array as :child_key option' do
-      before :all do
+      before :each do
         Engine.belongs_to(:vehicle, :model => Car, :child_key => [:bike_id])
         DataMapper.finalize
       end
@@ -694,7 +694,7 @@ describe DataMapper::Associations do
     end
 
     describe 'with a single element as :parent_key option' do
-      before :all do
+      before :each do
         Engine.belongs_to(:vehicle, :model => Car, :parent_key => :name)
         DataMapper.finalize
       end
@@ -705,7 +705,7 @@ describe DataMapper::Associations do
     end
 
     describe 'with an array as :parent_key option' do
-      before :all do
+      before :each do
         Engine.belongs_to(:vehicle, :model => Car, :parent_key => [:name])
         DataMapper.finalize
       end
@@ -720,7 +720,7 @@ describe DataMapper::Associations do
 
   describe '#has' do
     describe '1' do
-      before :all do
+      before :each do
         @model = Engine
         @name  = :engine
 
@@ -730,22 +730,22 @@ describe DataMapper::Associations do
       end
 
       supported_by :all do
-        before :all do
+        before :each do
           @car = Car.new
         end
 
         it { @car.should respond_to(@name) }
 
-        it_should_behave_like 'it creates a one accessor'
+        include_examples 'it creates a one accessor'
 
         it { @car.should respond_to("#{@name}=") }
 
-        it_should_behave_like 'it creates a one mutator'
+        include_examples 'it creates a one mutator'
       end
     end
 
     describe '1 through' do
-      before :all do
+      before :each do
         @model = Engine
         @name  = :engine
 
@@ -755,12 +755,12 @@ describe DataMapper::Associations do
       end
 
       supported_by :all do
-        before :all do
+        before :each do
           @no_join = defined?(DataMapper::Adapters::InMemoryAdapter) && @adapter.kind_of?(DataMapper::Adapters::InMemoryAdapter) ||
                      defined?(DataMapper::Adapters::YamlAdapter)     && @adapter.kind_of?(DataMapper::Adapters::YamlAdapter)
         end
 
-        before :all do
+        before :each do
           @car = Car.new
         end
 
@@ -770,16 +770,16 @@ describe DataMapper::Associations do
 
         it { @car.should respond_to(@name) }
 
-        it_should_behave_like 'it creates a one accessor'
+        include_examples 'it creates a one accessor'
 
         it { @car.should respond_to("#{@name}=") }
 
-        it_should_behave_like 'it creates a one mutator'
+        include_examples 'it creates a one mutator'
       end
     end
 
     describe 'n..n' do
-      before :all do
+      before :each do
         @model = Door
         @name  = :doors
 
@@ -789,22 +789,22 @@ describe DataMapper::Associations do
       end
 
       supported_by :all do
-        before :all do
+        before :each do
           @car = Car.new
         end
 
         it { @car.should respond_to(@name) }
 
-        it_should_behave_like 'it creates a many accessor'
+        include_examples 'it creates a many accessor'
 
         it { @car.should respond_to("#{@name}=") }
 
-        it_should_behave_like 'it creates a many mutator'
+        include_examples 'it creates a many mutator'
       end
     end
 
     describe 'n..n through' do
-      before :all do
+      before :each do
         @model = Window
         @name  = :windows
 
@@ -814,12 +814,12 @@ describe DataMapper::Associations do
       end
 
       supported_by :all do
-        before :all do
+        before :each do
           @no_join = defined?(DataMapper::Adapters::InMemoryAdapter) && @adapter.kind_of?(DataMapper::Adapters::InMemoryAdapter) ||
                      defined?(DataMapper::Adapters::YamlAdapter)     && @adapter.kind_of?(DataMapper::Adapters::YamlAdapter)
         end
 
-        before :all do
+        before :each do
           @car = Car.new
         end
 
@@ -829,16 +829,16 @@ describe DataMapper::Associations do
 
         it { @car.should respond_to(@name) }
 
-        it_should_behave_like 'it creates a many accessor'
+        include_examples 'it creates a many accessor'
 
         it { @car.should respond_to("#{@name}=") }
 
-        it_should_behave_like 'it creates a many mutator'
+        include_examples 'it creates a many mutator'
       end
     end
 
     describe 'when the 3rd argument is a Model' do
-      before :all do
+      before :each do
         Car.has(1, :engine, Engine)
         DataMapper.finalize
       end
@@ -849,7 +849,7 @@ describe DataMapper::Associations do
     end
 
     describe 'when the 3rd argument is a String' do
-      before :all do
+      before :each do
         Car.has(1, :engine, 'Engine')
         DataMapper.finalize
       end
@@ -870,7 +870,7 @@ describe DataMapper::Associations do
 
   describe 'property prefix inference' do
     describe 'when a relationship has an inverse' do
-      before :all do
+      before :each do
         @engine_relationship = Car.has(1, :engine, :inverse => Engine.belongs_to(:sports_car, Car))
         DataMapper.finalize
       end
@@ -883,7 +883,7 @@ describe DataMapper::Associations do
     end
 
     describe 'when a relationship does not have an inverse' do
-      before :all do
+      before :each do
         @engine_relationship = Car.has(1, :engine)
         DataMapper.finalize
       end
@@ -897,7 +897,7 @@ describe DataMapper::Associations do
 
     describe 'when a relationship is inherited' do
       describe 'has an inverse' do
-        before :all do
+        before :each do
           Car.property(:type, DataMapper::Property::Discriminator)
 
           class ::ElectricCar < Car; end
@@ -907,7 +907,7 @@ describe DataMapper::Associations do
         end
 
         supported_by :all do
-          before :all do
+          before :each do
             @engine_relationship = ElectricCar.relationships(@repository.name)[:engine]
           end
 
@@ -922,7 +922,7 @@ describe DataMapper::Associations do
       end
 
       describe 'does not have an inverse' do
-        before :all do
+        before :each do
           Car.property(:type, DataMapper::Property::Discriminator)
 
           class ::ElectricCar < Car; end
@@ -932,7 +932,7 @@ describe DataMapper::Associations do
         end
 
         supported_by :all do
-          before :all do
+          before :each do
             @engine_relationship = ElectricCar.relationships(@repository.name)[:engine]
           end
 
@@ -949,7 +949,7 @@ describe DataMapper::Associations do
 
     describe "when a subclass defines it's own relationship" do
       describe 'has an inverse' do
-        before :all do
+        before :each do
           Car.property(:type, DataMapper::Property::Discriminator)
 
           class ::ElectricCar < Car; end
@@ -959,7 +959,7 @@ describe DataMapper::Associations do
         end
 
         supported_by :all do
-          before :all do
+          before :each do
             @engine_relationship = ElectricCar.relationships(@repository.name)[:engine]
           end
 
@@ -974,7 +974,7 @@ describe DataMapper::Associations do
       end
 
       describe 'does not have an inverse' do
-        before :all do
+        before :each do
           Car.property(:type, DataMapper::Property::Discriminator)
 
           class ::ElectricCar < Car; end
@@ -984,7 +984,7 @@ describe DataMapper::Associations do
         end
 
         supported_by :all do
-          before :all do
+          before :each do
             @engine_relationship = ElectricCar.relationships(@repository.name)[:engine]
           end
 
@@ -1024,7 +1024,7 @@ describe DataMapper::Associations do
     end
 
     supported_by :all do
-      before :all do
+      before :each do
         @company  = Company.create(:name => 'ACME Inc.')
         @employee = @company.employees.create(:name => 'Wil E. Coyote')
       end

@@ -27,7 +27,7 @@ describe DataMapper::Associations::Relationship do
 
   describe '#inverse' do
     describe 'with matching relationships' do
-      before :all do
+      before :each do
         @comments_relationship = @article_model.has(n, :comments)
         @article_relationship  = @comment_model.belongs_to(:article)
 
@@ -48,7 +48,7 @@ describe DataMapper::Associations::Relationship do
     end
 
     describe 'with matching relationships where the child repository is not nil' do
-      before :all do
+      before :each do
         @comments_relationship = @article_model.has(n, :comments, :repository => :default)
         @article_relationship  = @comment_model.belongs_to(:article)
 
@@ -69,7 +69,7 @@ describe DataMapper::Associations::Relationship do
     end
 
     describe 'with matching relationships where the parent repository is not nil' do
-      before :all do
+      before :each do
         @comments_relationship = @article_model.has(n, :comments)
         @article_relationship  = @comment_model.belongs_to(:article, :repository => :default)
 
@@ -90,7 +90,7 @@ describe DataMapper::Associations::Relationship do
     end
 
     describe 'with no matching relationship', 'from the parent side' do
-      before :all do
+      before :each do
         # added to force OneToMany::Relationship#inverse to consider the
         # child_key differences
         @comment_model.belongs_to(:other_article, @article_model, :child_key => [ :other_article_id ])
@@ -126,7 +126,7 @@ describe DataMapper::Associations::Relationship do
     end
 
     describe 'with no matching relationship', 'from the child side' do
-      before :all do
+      before :each do
         @relationship = @comment_model.belongs_to(:article)
 
         @inverse = @relationship.inverse
@@ -159,14 +159,14 @@ describe DataMapper::Associations::Relationship do
   end
 
   describe '#valid?' do
-    before :all do
+    before :each do
       @relationship = @article_model.has(n, :comments)
       DataMapper.finalize
     end
 
     supported_by :all do
       describe 'with valid resource' do
-        before :all do
+        before :each do
           @article  = @article_model.create(:title => 'Relationships in DataMapper')
           @resource = @article.comments.create
         end
@@ -177,7 +177,7 @@ describe DataMapper::Associations::Relationship do
       end
 
       describe 'with a resource of the wrong class' do
-        before :all do
+        before :each do
           @resource  = @article_model.new
         end
 
@@ -187,7 +187,7 @@ describe DataMapper::Associations::Relationship do
       end
 
       describe 'with a resource without a valid parent' do
-        before :all do
+        before :each do
           @resource = @comment_model.new
         end
 

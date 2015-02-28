@@ -8,13 +8,13 @@ describe 'DataMapper::OrderedSet#size' do
   context 'when no entry is present' do
     let(:ordered_set) { DataMapper::OrderedSet.new }
 
-    it_should_behave_like 'DataMapper::OrderedSet#size when no entry is present'
+    include_examples 'DataMapper::OrderedSet#size when no entry is present'
   end
 
   context 'when 1 entry is present' do
     let(:ordered_set) { DataMapper::OrderedSet.new([ 1 ]) }
 
-    it_should_behave_like 'DataMapper::OrderedSet#size when 1 entry is present'
+    include_examples 'DataMapper::OrderedSet#size when 1 entry is present'
   end
 
   context 'when more than 1 entry is present' do
@@ -22,6 +22,6 @@ describe 'DataMapper::OrderedSet#size' do
     let(:entries)       { [ 1, 2 ]                            }
     let(:expected_size) { entries.size                        }
 
-    it_should_behave_like 'DataMapper::OrderedSet#size when more than 1 entry is present'
+    include_examples 'DataMapper::OrderedSet#size when more than 1 entry is present'
   end
 end

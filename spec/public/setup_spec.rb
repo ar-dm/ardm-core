@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DataMapper do
   describe '.setup' do
     describe 'using connection string' do
-      before :all do
+      before :each do
         @return = DataMapper.setup(:setup_test, 'in_memory://user:pass@hostname:1234/path?foo=bar&baz=foo#fragment')
 
         @options = @return.options
@@ -50,7 +50,7 @@ describe DataMapper do
     end
 
     describe 'using options' do
-      before :all do
+      before :each do
         @return = DataMapper.setup(:setup_test, :adapter => :in_memory, :foo => 'bar')
 
         @options = @return.options
@@ -87,7 +87,7 @@ describe DataMapper do
     end
 
     describe 'using an instance of an adapter' do
-      before :all do
+      before :each do
         @adapter = DataMapper::Adapters::InMemoryAdapter.new(:setup_test)
 
         @return = DataMapper.setup(@adapter)
@@ -117,7 +117,7 @@ describe DataMapper do
     supported_by :postgres, :mysql, :sqlite3, :sqlserver do
       { :path => :database, :user => :username }.each do |original_key, new_key|
         describe "using #{new_key.inspect} option" do
-          before :all do
+          before :each do
             @return = DataMapper.setup(:setup_test, :adapter => @adapter.options[:adapter], new_key => @adapter.options[original_key])
 
             @options = @return.options

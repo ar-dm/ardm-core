@@ -33,7 +33,7 @@ describe DataMapper::Associations do
 
   describe '#has' do
     describe '1' do
-      before :all do
+      before :each do
         @relationship = Car.has(1, :engine)
       end
 
@@ -55,7 +55,7 @@ describe DataMapper::Associations do
     end
 
     describe 'n..n' do
-      before :all do
+      before :each do
         @relationship = Car.has(1..4, :doors)
       end
 
@@ -77,7 +77,7 @@ describe DataMapper::Associations do
     end
 
     describe 'n..n through' do
-      before :all do
+      before :each do
         Door.has(1, :window)
         Car.has(1..4, :doors)
 
@@ -102,7 +102,7 @@ describe DataMapper::Associations do
     end
 
     describe 'n' do
-      before :all do
+      before :each do
         @relationship = Car.has(n, :doors)
       end
 
@@ -124,7 +124,7 @@ describe DataMapper::Associations do
     end
 
     describe 'n through' do
-      before :all do
+      before :each do
         Door.has(1, :windows)
         Car.has(1..4, :doors)
 
@@ -150,7 +150,7 @@ describe DataMapper::Associations do
   end
 
   describe '#belongs_to' do
-    before :all do
+    before :each do
       @relationship = Engine.belongs_to(:car)
     end
 

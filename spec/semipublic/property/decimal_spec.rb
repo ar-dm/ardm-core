@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Decimal do
-  before :all do
+  before :each do
     @name          = :rate
     @type          = described_class
     @options       = { :precision => 5, :scale => 2 }
@@ -10,7 +10,7 @@ describe DataMapper::Property::Decimal do
     @invalid_value = true
   end
 
-  it_should_behave_like 'A semipublic Property'
+  include_examples 'A semipublic Property'
 
   describe '#typecast_to_primitive' do
     it 'returns same value if a decimal' do

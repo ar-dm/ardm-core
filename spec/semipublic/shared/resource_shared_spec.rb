@@ -1,5 +1,5 @@
-share_examples_for 'A semipublic Resource' do
-  before :all do
+RSpec.shared_examples_for 'A semipublic Resource' do
+  before :each do
     %w[ @user_model @user ].each do |ivar|
       raise "+#{ivar}+ should be defined in before block" unless instance_variable_get(ivar)
     end
@@ -163,7 +163,7 @@ share_examples_for 'A semipublic Resource' do
     end
 
     with_alternate_adapter do
-      before :all do
+      before :each do
         if @user_model.respond_to?(:auto_migrate!)
           # force the user model to be available in the alternate repository
           @user_model.auto_migrate!(@adapter.name)

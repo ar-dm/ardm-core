@@ -1,10 +1,10 @@
-share_examples_for 'A Collection supporting Strategic Eager Loading' do
+RSpec.shared_examples_for 'A Collection supporting Strategic Eager Loading' do
   describe 'using SEL when looping within a loop' do
-    before :all do
+    before :each do
       @many_to_many = @articles.kind_of?(DataMapper::Associations::ManyToMany::Collection)
     end
 
-    before :all do
+    before :each do
       attributes = {}
 
       unless @many_to_many
@@ -17,7 +17,7 @@ share_examples_for 'A Collection supporting Strategic Eager Loading' do
       @new_revision = @new_article.revisions.create(attributes.merge(:title => 'New Revision'))
     end
 
-    before :all do
+    before :each do
       @original_adapter = @adapter
 
       @adapter.singleton_class.class_eval do
@@ -31,7 +31,7 @@ share_examples_for 'A Collection supporting Strategic Eager Loading' do
       @articles.instance_variable_get(:@query).instance_variable_set(:@repository, @repository)
     end
 
-    before :all do
+    before :each do
       @results = []
 
       @articles.each do |article|
@@ -41,7 +41,7 @@ share_examples_for 'A Collection supporting Strategic Eager Loading' do
       end
     end
 
-    after :all do
+    after :each do
       @adapter = @original_adapter
     end
 
@@ -63,9 +63,9 @@ share_examples_for 'A Collection supporting Strategic Eager Loading' do
   end
 end
 
-share_examples_for 'A Resource supporting Strategic Eager Loading' do
+RSpec.shared_examples_for 'A Resource supporting Strategic Eager Loading' do
   describe 'using SEL when inside a Collection' do
-    before :all do
+    before do
       @referrer = @user_model.create(:name => 'Referrer', :comment => @comment)
 
       @user.update(:referrer => @referrer)
@@ -73,7 +73,7 @@ share_examples_for 'A Resource supporting Strategic Eager Loading' do
       @new_user = @user_model.create(:name => 'Another User', :referrer => @referrer, :comment => @comment)
     end
 
-    before :all do
+    before do
       @original_adapter = @adapter
 
       @adapter.singleton_class.class_eval do
@@ -86,7 +86,7 @@ share_examples_for 'A Resource supporting Strategic Eager Loading' do
       @repository.instance_variable_set(:@adapter, @adapter)
     end
 
-    before :all do
+    before do
       @results = @user_model.all.map do |user|
         [ user, user.referrer ]
       end
@@ -95,7 +95,7 @@ share_examples_for 'A Resource supporting Strategic Eager Loading' do
       @results.sort!
     end
 
-    after :all do
+    after do
       @adapter = @original_adapter
     end
 

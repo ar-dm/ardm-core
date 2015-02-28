@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Text do
-  before :all do
+  before :each do
     @name          = :title
     @type          = described_class
     @value         = 'value'
@@ -9,10 +9,10 @@ describe DataMapper::Property::Text do
     @invalid_value = 1
   end
 
-  it_should_behave_like 'A semipublic Property'
+  include_examples 'A semipublic Property'
 
   describe '#load' do
-    before :all do
+    before :each do
       @value = mock('value')
     end
 

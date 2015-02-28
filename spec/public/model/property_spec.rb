@@ -43,7 +43,7 @@ describe DataMapper::Model::Property do
         ::UserDefault.property(:name, String)
       end
 
-      it_should_behave_like "a correct property declaration"
+      include_examples "a correct property declaration"
     end
 
     context "using alternate repository" do
@@ -64,7 +64,7 @@ describe DataMapper::Model::Property do
         ::UserAlternate.property(:alt_name, String)
       end
 
-      it_should_behave_like "a correct property declaration"
+      include_examples "a correct property declaration"
     end
 
     it 'should raise an exception if the method exists' do

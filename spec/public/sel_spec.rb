@@ -35,7 +35,7 @@ describe 'SEL', 'with STI subclasses' do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       author1 = @author_model.create(:name => 'Dan Kubb')
       author2 = @author_model.create(:name => 'Sindre Aarsaether')
 

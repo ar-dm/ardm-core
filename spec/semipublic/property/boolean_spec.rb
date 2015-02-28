@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Boolean do
-  before :all do
+  before :each do
     @name          = :active
     @type          = described_class
     @value         = true
@@ -9,7 +9,7 @@ describe DataMapper::Property::Boolean do
     @invalid_value = 1
   end
 
-  it_should_behave_like 'A semipublic Property'
+  include_examples 'A semipublic Property'
 
   describe '#valid?' do
     [ true, false ].each do |value|

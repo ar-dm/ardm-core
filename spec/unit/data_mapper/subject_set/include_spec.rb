@@ -21,12 +21,12 @@ describe 'DataMapper::SubjectSet#include?' do
   context 'when the entry is present' do
     let(:set) { DataMapper::SubjectSet.new([ entry ]) }
 
-    it_should_behave_like 'DataMapper::SubjectSet#include? when the entry is present'
+    include_examples 'DataMapper::SubjectSet#include? when the entry is present'
   end
 
   context 'when the entry is not present' do
     let(:set) { DataMapper::SubjectSet.new }
 
-    it_should_behave_like 'DataMapper::SubjectSet#include? when the entry is not present'
+    include_examples 'DataMapper::SubjectSet#include? when the entry is not present'
   end
 end

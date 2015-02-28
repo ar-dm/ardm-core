@@ -22,12 +22,12 @@ describe 'DataMapper::SubjectSet#named?' do
   context 'when no entry with the given name is present' do
     let(:set) { DataMapper::SubjectSet.new([]) }
 
-    it_should_behave_like 'DataMapper::SubjectSet#named? when no entry with the given name is present'
+    include_examples 'DataMapper::SubjectSet#named? when no entry with the given name is present'
   end
 
   context 'when an entry with the given name is present' do
     let(:set) { DataMapper::SubjectSet.new([ entry ]) }
 
-    it_should_behave_like 'DataMapper::SubjectSet#named? when an entry with the given name is present'
+    include_examples 'DataMapper::SubjectSet#named? when an entry with the given name is present'
   end
 end

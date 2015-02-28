@@ -37,7 +37,7 @@ describe DataMapper::Property::Discriminator do
 
   describe 'Model#new' do
     describe 'when provided a String discriminator in the attributes' do
-      before :all do
+      before :each do
         @resource = @article_model.new(:type => 'Blog::Release')
       end
 
@@ -51,7 +51,7 @@ describe DataMapper::Property::Discriminator do
     end
 
     describe 'when provided a Class discriminator in the attributes' do
-      before :all do
+      before :each do
         @resource = @article_model.new(:type => Blog::Release)
       end
 
@@ -65,7 +65,7 @@ describe DataMapper::Property::Discriminator do
     end
 
     describe 'when not provided a discriminator in the attributes' do
-      before :all do
+      before :each do
         @resource = @article_model.new
       end
 
@@ -112,7 +112,7 @@ describe DataMapper::Property::Discriminator do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @announcement = @announcement_model.create(:title => 'Announcement')
     end
 

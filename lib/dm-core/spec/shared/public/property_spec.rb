@@ -1,5 +1,5 @@
-share_examples_for 'A public Property' do
-  before :all do
+RSpec.shared_examples_for 'A public Property' do
+  before :each do
     %w[ @type @primitive @name @value @other_value ].each do |ivar|
       raise "+#{ivar}+ should be defined in before block" unless instance_variable_defined?(ivar)
     end
@@ -16,13 +16,13 @@ share_examples_for 'A public Property' do
   end
 
   describe "with a sub-type" do
-    before :all do
+    before :each do
       class ::SubType < @type; end
       @subtype = ::SubType
       @type.accept_options :foo, :bar
     end
 
-    before :all do
+    before :each do
       @original = @type.accepted_options.dup
     end
 
@@ -31,7 +31,7 @@ share_examples_for 'A public Property' do
     end
 
     describe "predefined options" do
-      before :all do
+      before :each do
         class ::ChildSubType < @subtype
           default nil
         end
@@ -76,7 +76,7 @@ share_examples_for 'A public Property' do
         end
 
         describe "auto-generated option setters" do
-          before :all do
+          before :each do
             @type.foo true
             @type.bar 1
             @property = @type.new(@model, @name, @options)
@@ -119,7 +119,7 @@ share_examples_for 'A public Property' do
     describe "##{method = "#{opt}?"}" do
       [true, false].each do |value|
         describe "when created with :#{opt} => #{value}" do
-          before :all do
+          before :each do
             @property = @type.new(@model, @name, @options.merge(opt => value))
           end
 
@@ -144,7 +144,7 @@ share_examples_for 'A public Property' do
     describe "##{method}" do
       [true, false].each do |value|
         describe "when created with :#{method} => #{value}" do
-          before :all do
+          before :each do
             opt = method.to_s.chomp('?').to_sym
             @property = @type.new(@model, @name, @options.merge(opt => value))
           end
@@ -159,7 +159,7 @@ share_examples_for 'A public Property' do
 
   describe "#lazy?" do
     describe "when created with :lazy => true, :key => false" do
-      before :all do
+      before :each do
         @property = @type.new(@model, @name, @options.merge(:lazy => true, :key => false))
       end
 
@@ -169,7 +169,7 @@ share_examples_for 'A public Property' do
     end
 
     describe "when created with :lazy => true, :key => true" do
-      before :all do
+      before :each do
         @property = @type.new(@model, @name, @options.merge(:lazy => true, :key => true))
       end
 

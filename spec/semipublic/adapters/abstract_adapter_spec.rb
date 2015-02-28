@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'AbstractAdapter' do
-  before :all do
+  before :each do
     @adapter = DataMapper::Adapters::AbstractAdapter.new(:abstract, :foo => 'bar')
     @adapter_class = @adapter.class
     @scheme        = DataMapper::Inflector.underscore(DataMapper::Inflector.demodulize(@adapter_class).chomp('Adapter'))

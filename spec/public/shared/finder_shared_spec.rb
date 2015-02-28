@@ -1,5 +1,5 @@
-share_examples_for 'Finder Interface' do
-  before :all do
+RSpec.shared_examples_for 'Finder Interface' do
+  before :each do
     %w[ @article_model @article @other @articles ].each do |ivar|
       raise "+#{ivar}+ should be defined in before block" unless instance_variable_defined?(ivar)
       raise "+#{ivar}+ should not be nil in before block" unless instance_variable_get(ivar)
@@ -14,11 +14,7 @@ share_examples_for 'Finder Interface' do
 
     @many_to_many = @articles.kind_of?(DataMapper::Associations::ManyToMany::Collection)
 
-    @skip = @no_join && @many_to_many
-  end
-
-  before do
-    pending if @skip
+    skip if @no_join && @many_to_many
   end
 
   it 'should be Enumerable' do
@@ -29,16 +25,14 @@ share_examples_for 'Finder Interface' do
     it { @articles.should respond_to(method) }
 
     describe "##{method}" do
-      before :all do
+      before :each do
         1.upto(10) { |number| @articles.create(:content => "Article #{number}") }
         @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
       end
 
       describe 'with a positive offset' do
-        before :all do
-          unless @skip
-            @return = @resource = @articles.send(method, 0)
-          end
+        before :each do
+          @return = @resource = @articles.send(method, 0)
         end
 
         it 'should return a Resource' do
@@ -51,7 +45,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a positive offset and length' do
-        before :all do
+        before :each do
           @return = @resources = @articles.send(method, 5, 5)
         end
 
@@ -69,7 +63,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a positive range' do
-        before :all do
+        before :each do
           @return = @resources = @articles.send(method, 5..10)
         end
 
@@ -87,10 +81,8 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a negative offset' do
-        before :all do
-          unless @skip
-            @return = @resource = @articles.send(method, -1)
-          end
+        before :each do
+          @return = @resource = @articles.send(method, -1)
         end
 
         it 'should return a Resource' do
@@ -103,7 +95,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a negative offset and length' do
-        before :all do
+        before :each do
           @return = @resources = @articles.send(method, -5, 5)
         end
 
@@ -121,7 +113,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a negative range' do
-        before :all do
+        before :each do
           @return = @resources = @articles.send(method, -5..-2)
         end
 
@@ -139,7 +131,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with an empty exclusive range' do
-        before :all do
+        before :each do
           @return = @resources = @articles.send(method, 0...0)
         end
 
@@ -157,10 +149,8 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with an offset not within the Collection' do
-        before :all do
-          unless @skip
-            @return = @articles.send(method, 99)
-          end
+        before :each do
+          @return = @articles.send(method, 99)
         end
 
         it 'should return nil' do
@@ -169,7 +159,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with an offset and length not within the Collection' do
-        before :all do
+        before :each do
           @return = @articles.send(method, 99, 1)
         end
 
@@ -183,7 +173,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a range not within the Collection' do
-        before :all do
+        before :each do
           @return = @articles.send(method, 99..100)
         end
 
@@ -202,7 +192,7 @@ share_examples_for 'Finder Interface' do
 
   describe '#all' do
     describe 'with no arguments' do
-      before :all do
+      before :each do
         @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
 
         @return = @collection = @articles.all
@@ -234,7 +224,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a query' do
-      before :all do
+      before :each do
         @new  = @articles.create(:content => 'New Article')
         @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
 
@@ -267,7 +257,7 @@ share_examples_for 'Finder Interface' do
         pending unless defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
       end
 
-      before :all do
+      before :each do
         @new  = @articles.create(:subtitle => 'New Article')
         @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
 
@@ -305,7 +295,7 @@ share_examples_for 'Finder Interface' do
 
     describe 'with a query using a m:1 relationship' do
       describe 'with a Hash' do
-        before :all do
+        before :each do
           @return = @articles.all(:original => @original.attributes)
         end
 
@@ -323,7 +313,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a resource' do
-        before :all do
+        before :each do
           @return = @articles.all(:original => @original)
         end
 
@@ -341,7 +331,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a collection' do
-        before :all do
+        before :each do
           @collection = @article_model.all(
             Hash[ @article_model.key.zip(@original.key) ]
           )
@@ -364,7 +354,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with an empty Array' do
-        before :all do
+        before :each do
           @return = @articles.all(:original => [])
         end
 
@@ -382,7 +372,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a nil value' do
-        before :all do
+        before :each do
           @return = @articles.all(:original => nil)
         end
 
@@ -416,7 +406,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a negated nil value' do
-        before :all do
+        before :each do
           @return = @articles.all(:original.not => nil)
         end
 
@@ -439,12 +429,12 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a query using a 1:1 relationship' do
-      before :all do
+      before :each do
         @new = @articles.create(:content => 'New Article', :original => @article)
       end
 
       describe 'with a Hash' do
-        before :all do
+        before :each do
           @return = @articles.all(:previous => @new.attributes)
         end
 
@@ -462,7 +452,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a resource' do
-        before :all do
+        before :each do
           @return = @articles.all(:previous => @new)
         end
 
@@ -480,7 +470,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a collection' do
-        before :all do
+        before :each do
           @collection = @article_model.all(
             Hash[ @article_model.key.zip(@new.key) ]
           )
@@ -502,7 +492,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with an empty Array' do
-        before :all do
+        before :each do
           @return = @articles.all(:previous => [])
         end
 
@@ -520,7 +510,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a nil value' do
-        before :all do
+        before :each do
           @return = @articles.all(:previous => nil)
         end
 
@@ -548,7 +538,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a negated nil value' do
-        before :all do
+        before :each do
           @return = @articles.all(:previous.not => nil)
         end
 
@@ -577,12 +567,12 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a query using a 1:m relationship' do
-      before :all do
+      before :each do
         @new = @articles.create(:content => 'New Article', :original => @article)
       end
 
       describe 'with a Hash' do
-        before :all do
+        before :each do
           @return = @articles.all(:revisions => @new.attributes)
         end
 
@@ -600,7 +590,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a resource' do
-        before :all do
+        before :each do
           @return = @articles.all(:revisions => @new)
         end
 
@@ -618,7 +608,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a collection' do
-        before :all do
+        before :each do
           @collection = @article_model.all(
             Hash[ @article_model.key.zip(@new.key) ]
           )
@@ -640,7 +630,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with an empty Array' do
-        before :all do
+        before :each do
           @return = @articles.all(:revisions => [])
         end
 
@@ -658,7 +648,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a nil value' do
-        before :all do
+        before :each do
           @return = @articles.all(:revisions => nil)
         end
 
@@ -686,7 +676,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a negated nil value' do
-        before :all do
+        before :each do
           @return = @articles.all(:revisions.not => nil)
         end
 
@@ -715,12 +705,12 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a query using a m:m relationship' do
-      before :all do
+      before :each do
         @publication = @article.publications.create(:name => 'DataMapper Now')
       end
 
       describe 'with a Hash' do
-        before :all do
+        before :each do
           @return = @articles.all(:publications => @publication.attributes)
         end
 
@@ -740,7 +730,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a resource' do
-        before :all do
+        before :each do
           @return = @articles.all(:publications => @publication)
         end
 
@@ -760,7 +750,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a collection' do
-        before :all do
+        before :each do
           @collection = @publication_model.all(
             Hash[ @publication_model.key.zip(@publication.key) ]
           )
@@ -784,7 +774,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with an empty Array' do
-        before :all do
+        before :each do
           @return = @articles.all(:publications => [])
         end
 
@@ -802,7 +792,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a nil value' do
-        before :all do
+        before :each do
           @return = @articles.all(:publications => nil)
         end
 
@@ -826,7 +816,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a negated nil value' do
-        before :all do
+        before :each do
           @return = @articles.all(:publications.not => nil)
         end
 
@@ -854,13 +844,13 @@ share_examples_for 'Finder Interface' do
   it { @articles.should respond_to(:at) }
 
   describe '#at' do
-    before :all do
+    before :each do
       @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
       @copy.to_a
     end
 
     describe 'with positive offset' do
-      before :all do
+      before :each do
         @return = @resource = @articles.at(0)
       end
 
@@ -876,7 +866,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with negative offset' do
-      before :all do
+      before :each do
         @return = @resource = @articles.at(-1)
       end
 
@@ -978,7 +968,7 @@ share_examples_for 'Finder Interface' do
   it { @articles.should respond_to(:first) }
 
   describe '#first' do
-    before :all do
+    before :each do
       1.upto(5) { |number| @articles.create(:content => "Article #{number}") }
 
       @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
@@ -986,7 +976,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with no arguments' do
-      before :all do
+      before :each do
         @return = @resource = @articles.first
       end
 
@@ -1000,7 +990,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with empty query' do
-      before :all do
+      before :each do
         @return = @resource = @articles.first({})
       end
 
@@ -1014,7 +1004,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a query' do
-      before :all do
+      before :each do
         @return = @resource = @articles.first(:content => 'Sample')
       end
 
@@ -1028,7 +1018,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a limit specified' do
-      before :all do
+      before :each do
         @return = @resources = @articles.first(1)
       end
 
@@ -1042,7 +1032,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'on an empty collection' do
-      before :all do
+      before :each do
         @articles = @articles.all(:id => nil)
         @return = @articles.first
       end
@@ -1057,7 +1047,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with offset specified' do
-      before :all do
+      before :each do
         @return = @resource = @articles.first(:offset => 1)
       end
 
@@ -1071,7 +1061,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a limit and query specified' do
-      before :all do
+      before :each do
         @return = @resources = @articles.first(1, :content => 'Sample')
       end
 
@@ -1089,7 +1079,7 @@ share_examples_for 'Finder Interface' do
 
   describe '#first_or_create' do
     describe 'with conditions that find an existing Resource' do
-      before :all do
+      before :each do
         @return = @resource = @articles.first_or_create(@article.attributes)
       end
 
@@ -1107,7 +1097,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with conditions that do not find an existing Resource' do
-      before :all do
+      before :each do
         @conditions = { :content => 'Unknown Content' }
         @attributes = {}
 
@@ -1132,7 +1122,7 @@ share_examples_for 'Finder Interface' do
 
   describe '#first_or_new' do
     describe 'with conditions that find an existing Resource' do
-      before :all do
+      before :each do
         @return = @resource = @articles.first_or_new(@article.attributes)
       end
 
@@ -1150,7 +1140,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with conditions that do not find an existing Resource' do
-      before :all do
+      before :each do
         @conditions = { :content => 'Unknown Content' }
         @attributes = {}
 
@@ -1176,10 +1166,8 @@ share_examples_for 'Finder Interface' do
 
     describe "##{method}" do
       describe 'with a key to a Resource within the Collection' do
-        before :all do
-          unless @skip
-            @return = @resource = @articles.send(method, *@article.key)
-          end
+        before :each do
+          @return = @resource = @articles.send(method, *@article.key)
         end
 
         it 'should return a Resource' do
@@ -1192,10 +1180,8 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with a key not typecast' do
-        before :all do
-          unless @skip
-            @return = @resource = @articles.send(method, *@article.key.map { |value| value.to_s })
-          end
+        before :each do
+          @return = @resource = @articles.send(method, *@article.key.map { |value| value.to_s })
         end
 
         it 'should return a Resource' do
@@ -1262,7 +1248,7 @@ share_examples_for 'Finder Interface' do
   it { @articles.should respond_to(:last) }
 
   describe '#last' do
-    before :all do
+    before :each do
       1.upto(5) { |number| @articles.create(:content => "Article #{number}") }
 
       @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
@@ -1270,7 +1256,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with no arguments' do
-      before :all do
+      before :each do
         @return = @resource = @articles.last
       end
 
@@ -1284,7 +1270,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a query' do
-      before :all do
+      before :each do
         @return = @resource = @articles.last(:content => 'Sample')
       end
 
@@ -1308,7 +1294,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a limit specified' do
-      before :all do
+      before :each do
         @return = @resources = @articles.last(1)
       end
 
@@ -1322,7 +1308,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with offset specified' do
-      before :all do
+      before :each do
         @return = @resource = @articles.last(:offset => 1)
       end
 
@@ -1336,7 +1322,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a limit and query specified' do
-      before :all do
+      before :each do
         @return = @resources = @articles.last(1, :content => 'Sample')
       end
 
@@ -1353,7 +1339,7 @@ share_examples_for 'Finder Interface' do
   it { @articles.should respond_to(:reverse) }
 
   describe '#reverse' do
-    before :all do
+    before :each do
       @query = @articles.query
 
       @new = @articles.create(:title => 'Sample Article')
@@ -1379,7 +1365,7 @@ share_examples_for 'Finder Interface' do
   describe '#values_at' do
     subject { @articles.values_at(*args) }
 
-    before :all do
+    before :each do
       @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
       @copy.to_a
     end
@@ -1429,7 +1415,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a belongs_to relationship method' do
-      before :all do
+      before :each do
         rescue_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
           @articles.create(:content => 'Another Article', :original => @original)
 
@@ -1453,7 +1439,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a has 1 relationship method' do
-      before :all do
+      before :each do
         # FIXME: create is necessary for m:m so that the intermediary
         # is created properly.  This does not occur with @new.save
         @new = @articles.send(@many_to_many ? :create : :new)
@@ -1465,7 +1451,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with no arguments' do
-        before :all do
+        before :each do
           @return = @articles.previous
         end
 
@@ -1486,7 +1472,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with arguments' do
-        before :all do
+        before :each do
           @return = @articles.previous(:fields => [ :id ])
         end
 
@@ -1514,7 +1500,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a has n relationship method' do
-      before :all do
+      before :each do
         # FIXME: create is necessary for m:m so that the intermediary
         # is created properly.  This does not occur with @new.save
         @new = @articles.send(@many_to_many ? :create : :new)
@@ -1527,7 +1513,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with no arguments' do
-        before :all do
+        before :each do
           @return = @collection = @articles.revisions
         end
 
@@ -1547,7 +1533,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with arguments' do
-        before :all do
+        before :each do
           @return = @collection = @articles.revisions(:fields => [ :id ])
         end
 
@@ -1574,7 +1560,7 @@ share_examples_for 'Finder Interface' do
     end
 
     describe 'with a has n :through relationship method' do
-      before :all do
+      before :each do
         @new = @articles.create
 
         @publication1 = @article.publications.create(:name => 'Ruby Today')
@@ -1582,7 +1568,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with no arguments' do
-        before :all do
+        before :each do
           @return = @collection = @articles.publications
         end
 
@@ -1606,7 +1592,7 @@ share_examples_for 'Finder Interface' do
       end
 
       describe 'with arguments' do
-        before :all do
+        before :each do
           @return = @collection = @articles.publications(:fields => [ :id ])
         end
 

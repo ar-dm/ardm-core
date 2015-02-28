@@ -26,7 +26,7 @@ describe 'One to One Associations when foreign key is part of a composite key an
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @parent = ParentModel.create(:integer_key => 1, :boolean_key => false)
       @child  = ChildModel.create(:integer_key => 1, :other_integer_key => 1, :boolean_key => false)
     end

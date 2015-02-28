@@ -30,18 +30,18 @@ describe 'DataMapper::SubjectSet#<<' do
   context 'when appending a not yet included entry' do
     let(:entry2) { Person.new('Alice', 'cryptography') }
 
-    it_should_behave_like 'DataMapper::SubjectSet#<< when appending a not yet included entry'
+    include_examples 'DataMapper::SubjectSet#<< when appending a not yet included entry'
   end
 
   context 'when updating an entry with the same cache key' do
     context 'and the new entry is already included' do
       let(:entry2) { entry1 }
 
-      it_should_behave_like 'DataMapper::SubjectSet#<< when updating an entry with the same cache key and the new entry is already included'
+      include_examples 'DataMapper::SubjectSet#<< when updating an entry with the same cache key and the new entry is already included'
     end
 
     context 'and the new entry is not yet included' do
-      it_should_behave_like 'DataMapper::SubjectSet#<< when updating an entry with the same cache key and the new entry is not yet included'
+      include_examples 'DataMapper::SubjectSet#<< when updating an entry with the same cache key and the new entry is not yet included'
     end
   end
 end

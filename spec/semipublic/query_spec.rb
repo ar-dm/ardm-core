@@ -26,7 +26,9 @@ describe DataMapper::Query do
 
     @repository = DataMapper::Repository.new(:default)
     @model      = User
+  end
 
+  before do
     @fields       = [ :name ].freeze
     @links        = [ :referrer ].freeze
     @conditions   = { :name => 'Dan Kubb' }
@@ -55,7 +57,7 @@ describe DataMapper::Query do
   describe '.new' do
     describe 'with a repository' do
       describe 'that is valid' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -77,7 +79,7 @@ describe DataMapper::Query do
 
     describe 'with a model' do
       describe 'that is valid' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -99,7 +101,7 @@ describe DataMapper::Query do
 
     describe 'with a fields option' do
       describe 'that is an Array containing a Symbol' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -111,7 +113,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a String' do
-        before :all do
+        before :each do
           @options[:fields] = [ 'name' ]
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -125,7 +127,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a Property' do
-        before :all do
+        before :each do
           @options[:fields] = @model.properties.values_at(:name)
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -139,7 +141,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a Property from an ancestor' do
-        before :all do
+        before :each do
           class ::Contact < User; end
 
           @options[:fields] = User.properties.values_at(:name)
@@ -155,7 +157,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:fields).freeze)
         end
 
@@ -209,7 +211,7 @@ describe DataMapper::Query do
 
     describe 'with a links option' do
       describe 'that is an Array containing a Symbol' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -221,7 +223,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a String' do
-        before :all do
+        before :each do
           @options[:links] = [ 'referrer' ]
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -235,7 +237,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a Relationship' do
-        before :all do
+        before :each do
           @options[:links] = @model.relationships.values_at(:referrer)
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -249,7 +251,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:links).freeze)
         end
 
@@ -304,7 +306,7 @@ describe DataMapper::Query do
     describe 'with a conditions option' do
       describe 'that is a valid Hash' do
         describe 'with the Property key' do
-          before :all do
+          before :each do
             @options[:conditions] = { @model.properties[:name] => 'Dan Kubb' }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -329,7 +331,7 @@ describe DataMapper::Query do
         end
 
         describe 'with the Symbol key mapping to a Property' do
-          before :all do
+          before :each do
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
 
@@ -353,7 +355,7 @@ describe DataMapper::Query do
         end
 
         describe 'with the String key mapping to a Property' do
-          before :all do
+          before :each do
             @options[:conditions] = { 'name' => 'Dan Kubb' }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -379,7 +381,7 @@ describe DataMapper::Query do
 
         supported_by :all do
           describe 'with the Symbol key mapping to a Relationship' do
-            before :all do
+            before :each do
               @user = @model.create(:name => 'Dan Kubb')
 
               @options[:conditions] = { :referrer => @user }
@@ -407,7 +409,7 @@ describe DataMapper::Query do
           end
 
           describe 'with the String key mapping to a Relationship' do
-            before :all do
+            before :each do
               @user = @model.create(:name => 'Dan Kubb')
 
               @options[:conditions] = { 'referrer' => @user }
@@ -435,7 +437,7 @@ describe DataMapper::Query do
           end
 
           describe 'with the Symbol key mapping to a Relationship and a nil value' do
-            before :all do
+            before :each do
               @options[:conditions] = { :referrer => nil }
 
               @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -461,7 +463,7 @@ describe DataMapper::Query do
           end
 
           describe 'with the Symbol key mapping to a Relationship and an empty Array' do
-            before :all do
+            before :each do
               @options[:conditions] = { :referrer => [] }
 
               @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -488,7 +490,7 @@ describe DataMapper::Query do
         end
 
         describe 'with the Query::Operator key' do
-          before :all do
+          before :each do
             @options[:conditions] = { :name.gte => 'Dan Kubb' }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -513,7 +515,7 @@ describe DataMapper::Query do
         end
 
         describe 'with the Query::Path key' do
-          before :all do
+          before :each do
             @options[:conditions] = { @model.referrer.name => 'Dan Kubb' }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -536,7 +538,7 @@ describe DataMapper::Query do
         end
 
         describe 'with the String key mapping to a Query::Path' do
-          before :all do
+          before :each do
             @options[:conditions] = { 'referrer.name' => 'Dan Kubb' }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -559,7 +561,7 @@ describe DataMapper::Query do
         end
 
         describe 'with an Array with 1 entry' do
-          before :all do
+          before :each do
             @options[:conditions] = { :name => [ 'Dan Kubb' ] }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -586,7 +588,7 @@ describe DataMapper::Query do
         end
 
         describe 'with an Array with no entries' do
-          before :all do
+          before :each do
             @options[:conditions] = { :name => [] }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -613,7 +615,7 @@ describe DataMapper::Query do
         end
 
         describe 'with an Array with duplicate entries' do
-          before :all do
+          before :each do
             @options[:conditions] = { :name => [ 'John Doe', 'Dan Kubb', 'John Doe' ] }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -638,7 +640,7 @@ describe DataMapper::Query do
         end
 
         describe 'with a Property subclass' do
-          before :all do
+          before :each do
             @options[:conditions] = { :password => 'password' }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -663,7 +665,7 @@ describe DataMapper::Query do
         end
 
         describe 'with a Symbol for a String property' do
-          before :all do
+          before :each do
             @options[:conditions] = { :name => 'Dan Kubb'.to_sym }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -688,7 +690,7 @@ describe DataMapper::Query do
         end
 
         describe 'with a Float for a Decimal property' do
-          before :all do
+          before :each do
             @options[:conditions] = { :balance => 50.5 }
             @return = DataMapper::Query.new(@repository, @model, @options.freeze)
           end
@@ -714,7 +716,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is a valid Array' do
-        before :all do
+        before :each do
           @options[:conditions] = [ 'name = ?', 'Dan Kubb' ]
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -732,7 +734,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:conditions).freeze)
         end
 
@@ -829,7 +831,7 @@ describe DataMapper::Query do
 
     describe 'with an offset option' do
       describe 'that is valid' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -841,7 +843,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:offset).freeze)
         end
 
@@ -879,7 +881,7 @@ describe DataMapper::Query do
 
     describe 'with a limit option' do
       describe 'that is valid' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -891,7 +893,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:limit).freeze)
         end
 
@@ -921,7 +923,7 @@ describe DataMapper::Query do
 
     describe 'with an order option' do
       describe 'that is a single Symbol' do
-        before :all do
+        before :each do
           @options[:order] = :name
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
@@ -934,7 +936,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is a single String' do
-        before :all do
+        before :each do
           @options[:order] = 'name'
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
@@ -947,7 +949,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is a single Property' do
-        before :all do
+        before :each do
           @options[:order] = @model.properties.values_at(:name)
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
@@ -960,7 +962,7 @@ describe DataMapper::Query do
       end
 
       describe 'that contains a Query::Direction with a property that is not part of the model' do
-        before :all do
+        before :each do
           @property = DataMapper::Property::String.new(@model, :unknown)
           @direction = DataMapper::Query::Direction.new(@property, :desc)
           @return = DataMapper::Query.new(@repository, @model, @options.update(:order => [ @direction ]))
@@ -972,7 +974,7 @@ describe DataMapper::Query do
       end
 
       describe 'that contains a Property that is not part of the model' do
-        before :all do
+        before :each do
           @property = DataMapper::Property::String.new(@model, :unknown)
           @return = DataMapper::Query.new(@repository, @model, @options.update(:order => [ @property ]))
         end
@@ -983,7 +985,7 @@ describe DataMapper::Query do
       end
 
       describe 'that contains a Query::Path to a property on a linked model' do
-        before :all do
+        before :each do
           @property = @model.referrer.name
           @return = DataMapper::Query.new(@repository, @model, @options.update(:order => [ @property ]))
         end
@@ -994,7 +996,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a Symbol' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -1006,7 +1008,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a String' do
-        before :all do
+        before :each do
           @options[:order] = [ 'name' ]
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -1020,7 +1022,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a Property' do
-        before :all do
+        before :each do
           @options[:order] = @model.properties.values_at(:name)
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -1034,7 +1036,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing a Property from an ancestor' do
-        before :all do
+        before :each do
           class ::Contact < User; end
 
           @options[:order] = User.properties.values_at(:name)
@@ -1050,7 +1052,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing an Operator' do
-        before :all do
+        before :each do
           @options[:order] = [ :name.asc ]
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -1064,7 +1066,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing an Query::Direction' do
-        before :all do
+        before :each do
           @options[:order] = [ DataMapper::Query::Direction.new(@model.properties[:name], :asc) ]
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -1078,7 +1080,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is an Array containing an Query::Direction with a Property from an ancestor' do
-        before :all do
+        before :each do
           class ::Contact < User; end
 
           @options[:order] = [ DataMapper::Query::Direction.new(User.properties[:name], :asc) ]
@@ -1094,7 +1096,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:order).freeze)
         end
 
@@ -1172,7 +1174,7 @@ describe DataMapper::Query do
 
     describe 'with a unique option' do
       describe 'that is valid' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -1184,7 +1186,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:unique, :links).freeze)
         end
 
@@ -1206,7 +1208,7 @@ describe DataMapper::Query do
 
     describe 'with an add_reversed option' do
       describe 'that is valid' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -1218,7 +1220,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:add_reversed).freeze)
         end
 
@@ -1241,7 +1243,7 @@ describe DataMapper::Query do
 
     describe 'with a reload option' do
       describe 'that is valid' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
         end
 
@@ -1253,7 +1255,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is missing' do
-        before :all do
+        before :each do
           @return = DataMapper::Query.new(@repository, @model, @options.except(:reload).freeze)
         end
 
@@ -1275,7 +1277,7 @@ describe DataMapper::Query do
 
     describe 'with options' do
       describe 'that are unknown' do
-        before :all do
+        before :each do
           @options.update(@options.delete(:conditions))
 
           @return = DataMapper::Query.new(@repository, @model, @options.freeze)
@@ -1306,7 +1308,7 @@ describe DataMapper::Query do
     end
 
     describe 'with no options' do
-      before :all do
+      before :each do
         @return = DataMapper::Query.new(@repository, @model)
       end
 
@@ -1349,7 +1351,7 @@ describe DataMapper::Query do
     @original   = @query
   end
 
-  before :all do
+  before :each do
     @other_options = {
       :fields       => [ @model.properties[:name] ].freeze,
       :links        => [ @model.relationships[:referrer] ].freeze,
@@ -1369,7 +1371,7 @@ describe DataMapper::Query do
 
   describe '#==' do
     describe 'when other is equal' do
-      before :all do
+      before :each do
         @return = @query == @query
       end
 
@@ -1377,7 +1379,7 @@ describe DataMapper::Query do
     end
 
     describe 'when other is equivalent' do
-      before :all do
+      before :each do
         @return = @query == @query.dup
       end
 
@@ -1386,7 +1388,7 @@ describe DataMapper::Query do
 
     DataMapper::Query::OPTIONS.each do |name|
       describe "when other has an inequalvalent #{name}" do
-        before :all do
+        before :each do
           @return = @query == @query.merge(name => @other_options[name])
         end
 
@@ -1395,7 +1397,7 @@ describe DataMapper::Query do
     end
 
     describe 'when other is a different type of object that can be compared, and is equivalent' do
-      before :all do
+      before :each do
         @other = OpenStruct.new(
           :repository    => @query.repository,
           :model         => @query.model,
@@ -1417,7 +1419,7 @@ describe DataMapper::Query do
     end
 
     describe 'when other is a different type of object that can be compared, and is not equivalent' do
-      before :all do
+      before :each do
         @other = OpenStruct.new(
           :repository    => @query.repository,
           :model         => @query.model,
@@ -1439,7 +1441,7 @@ describe DataMapper::Query do
     end
 
     describe 'when other is a different type of object that cannot be compared' do
-      before :all do
+      before :each do
         @return = @query == 'invalid'
       end
 
@@ -1450,7 +1452,7 @@ describe DataMapper::Query do
   it { should respond_to(:conditions) }
 
   describe '#conditions' do
-    before :all do
+    before :each do
       @query.update(:name => 'Dan Kubb')
 
       @return = @query.conditions
@@ -1476,7 +1478,7 @@ describe DataMapper::Query do
 
     describe "##{method}" do
       supported_by :all do
-        before :all do
+        before :each do
           @key = @model.key(@repository.name)
 
           @self_relationship = DataMapper::Associations::OneToMany::Relationship.new(
@@ -1627,7 +1629,7 @@ describe DataMapper::Query do
         end
 
         describe 'with self having links' do
-          before :all do
+          before :each do
             @do_adapter = defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
           end
 
@@ -1653,7 +1655,7 @@ describe DataMapper::Query do
         end
 
         describe 'with other having links' do
-          before :all do
+          before :each do
             @do_adapter = defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
           end
 
@@ -1827,7 +1829,7 @@ describe DataMapper::Query do
   it { should respond_to(:dup) }
 
   describe '#dup' do
-    before :all do
+    before :each do
       @new = @query.dup
     end
 
@@ -1852,7 +1854,7 @@ describe DataMapper::Query do
 
   describe '#eql?' do
     describe 'when other is equal' do
-      before :all do
+      before :each do
         @return = @query.eql?(@query)
       end
 
@@ -1860,7 +1862,7 @@ describe DataMapper::Query do
     end
 
     describe 'when other is eql' do
-      before :all do
+      before :each do
         @return = @query.eql?(@query.dup)
       end
 
@@ -1869,7 +1871,7 @@ describe DataMapper::Query do
 
     DataMapper::Query::OPTIONS.each do |name|
       describe "when other has an not eql #{name}" do
-        before :all do
+        before :each do
           @return = @query.eql?(@query.merge(name => @other_options[name]))
         end
 
@@ -1878,7 +1880,7 @@ describe DataMapper::Query do
     end
 
     describe 'when other is a different type of object' do
-      before :all do
+      before :each do
         @other = OpenStruct.new(
           :repository    => @query.repository,
           :model         => @query.model,
@@ -1903,7 +1905,7 @@ describe DataMapper::Query do
   it { should respond_to(:fields) }
 
   describe '#fields' do
-    before :all do
+    before :each do
       @return = @query.fields
     end
 
@@ -1918,7 +1920,7 @@ describe DataMapper::Query do
 
   describe '#filter_records' do
     supported_by :all do
-      before :all do
+      before :each do
         @john = { 'name' => 'John Doe',  'referrer_name' => nil         }
         @sam  = { 'name' => 'Sam Smoot', 'referrer_name' => nil         }
         @dan  = { 'name' => 'Dan Kubb',  'referrer_name' => 'Sam Smoot' }
@@ -1947,7 +1949,7 @@ describe DataMapper::Query do
   it { should respond_to(:inspect) }
 
   describe '#inspect' do
-    before :all do
+    before :each do
       @return = @query.inspect
     end
 
@@ -1973,7 +1975,7 @@ describe DataMapper::Query do
 
     describe "##{method}" do
       supported_by :all do
-        before :all do
+        before :each do
           @key = @model.key(@repository.name)
 
           @self_relationship = DataMapper::Associations::OneToMany::Relationship.new(
@@ -2135,7 +2137,7 @@ describe DataMapper::Query do
         end
 
         describe 'with self having links' do
-          before :all do
+          before :each do
             @do_adapter = defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
           end
 
@@ -2159,7 +2161,7 @@ describe DataMapper::Query do
         end
 
         describe 'with other having links' do
-          before :all do
+          before :each do
             @do_adapter = defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
           end
 
@@ -2327,7 +2329,7 @@ describe DataMapper::Query do
   it { should respond_to(:limit) }
 
   describe '#limit' do
-    before :all do
+    before :each do
       @return = @query.limit
     end
 
@@ -2342,7 +2344,7 @@ describe DataMapper::Query do
 
   describe '#limit_records' do
     supported_by :all do
-      before :all do
+      before :each do
         @john = { 'name' => 'John Doe',  'referrer_name' => nil         }
         @sam  = { 'name' => 'Sam Smoot', 'referrer_name' => nil         }
         @dan  = { 'name' => 'Dan Kubb',  'referrer_name' => 'Sam Smoot' }
@@ -2371,7 +2373,7 @@ describe DataMapper::Query do
   it { should respond_to(:links) }
 
   describe '#links' do
-    before :all do
+    before :each do
       @return = @query.links
     end
 
@@ -2384,7 +2386,7 @@ describe DataMapper::Query do
 
   describe '#match_records' do
     supported_by :all do
-      before :all do
+      before :each do
         @john = { 'name' => 'John Doe',  'referrer_name' => nil         }
         @sam  = { 'name' => 'Sam Smoot', 'referrer_name' => nil         }
         @dan  = { 'name' => 'Dan Kubb',  'referrer_name' => 'Sam Smoot' }
@@ -2438,7 +2440,7 @@ describe DataMapper::Query do
   it { should respond_to(:model) }
 
   describe '#model' do
-    before :all do
+    before :each do
       @return = @query.model
     end
 
@@ -2452,7 +2454,7 @@ describe DataMapper::Query do
   it { should respond_to(:offset) }
 
   describe '#offset' do
-    before :all do
+    before :each do
       @return = @query.offset
     end
 
@@ -2466,7 +2468,7 @@ describe DataMapper::Query do
   it { should respond_to(:order) }
 
   describe '#order' do
-    before :all do
+    before :each do
       @return = @query.order
     end
 
@@ -2481,7 +2483,7 @@ describe DataMapper::Query do
 
   describe '#raw?' do
     describe 'when the query contains raw conditions' do
-      before :all do
+      before :each do
         @query.update(:conditions => [ 'name = ?', 'Dan Kubb' ])
       end
 
@@ -2498,7 +2500,7 @@ describe DataMapper::Query do
   describe '#relative' do
     describe 'with a Hash' do
       describe 'that is empty' do
-        before :all do
+        before :each do
           @return = @query.relative({})
         end
 
@@ -2514,7 +2516,7 @@ describe DataMapper::Query do
       end
 
       describe 'using different options' do
-        before :all do
+        before :each do
           @return = @query.relative(@other_options)
         end
 
@@ -2562,7 +2564,7 @@ describe DataMapper::Query do
       end
 
       describe 'using extra options' do
-        before :all do
+        before :each do
           @options = { :name => 'Dan Kubb' }
 
           @return = @query.relative(@options)
@@ -2588,7 +2590,7 @@ describe DataMapper::Query do
       end
 
       describe 'using an offset when query offset is greater than 0' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 2)
 
           @return = @query.relative(:offset => 1)
@@ -2606,7 +2608,7 @@ describe DataMapper::Query do
       end
 
       describe 'using an limit when query limit specified' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 2)
 
           @return = @query.relative(:limit => 1)
@@ -2629,7 +2631,7 @@ describe DataMapper::Query do
 
   describe '#reload?' do
     describe 'when the query should reload' do
-      before :all do
+      before :each do
         @query.update(:reload => true)
       end
 
@@ -2644,7 +2646,7 @@ describe DataMapper::Query do
   it { should respond_to(:repository) }
 
   describe '#repository' do
-    before :all do
+    before :each do
       @return = @query.repository
     end
 
@@ -2658,7 +2660,7 @@ describe DataMapper::Query do
   it { should respond_to(:reverse) }
 
   describe '#reverse' do
-    before :all do
+    before :each do
       @return = @query.reverse
     end
 
@@ -2687,7 +2689,7 @@ describe DataMapper::Query do
   it { should respond_to(:reverse!) }
 
   describe '#reverse!' do
-    before :all do
+    before :each do
       @return = @query.reverse!
     end
 
@@ -2705,7 +2707,7 @@ describe DataMapper::Query do
 
     describe "##{method}" do
       describe 'with a positive offset' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 2)
 
           @return = @query.send(method, 1)
@@ -2727,7 +2729,7 @@ describe DataMapper::Query do
       end
 
       describe 'with a positive offset and length' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 2)
 
           @return = @query.send(method, 1, 1)
@@ -2749,7 +2751,7 @@ describe DataMapper::Query do
       end
 
       describe 'with a positive range' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 3)
 
           @return = @query.send(method, 1..2)
@@ -2771,7 +2773,7 @@ describe DataMapper::Query do
       end
 
       describe 'with a negative offset' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 2)
 
           @return = @query.send(method, -1)
@@ -2795,7 +2797,7 @@ describe DataMapper::Query do
       end
 
       describe 'with a negative offset and length' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 2)
 
           @return = @query.send(method, -1, 1)
@@ -2819,7 +2821,7 @@ describe DataMapper::Query do
       end
 
       describe 'with a negative range' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 3)
 
           rescue_if "TODO: update Query##{method} handle negative range" do
@@ -2847,7 +2849,7 @@ describe DataMapper::Query do
       end
 
       describe 'with an offset not within range' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 3)
         end
 
@@ -2859,7 +2861,7 @@ describe DataMapper::Query do
       end
 
       describe 'with an offset and length not within range' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 3)
         end
 
@@ -2871,7 +2873,7 @@ describe DataMapper::Query do
       end
 
       describe 'with a range not within range' do
-        before :all do
+        before :each do
           @query = @query.update(:offset => 1, :limit => 3)
         end
 
@@ -2896,7 +2898,7 @@ describe DataMapper::Query do
 
   describe '#slice!' do
     describe 'with a positive offset' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 2)
 
         @return = @query.slice!(1)
@@ -2918,7 +2920,7 @@ describe DataMapper::Query do
     end
 
     describe 'with a positive offset and length' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 2)
 
         @return = @query.slice!(1, 1)
@@ -2940,7 +2942,7 @@ describe DataMapper::Query do
     end
 
     describe 'with a positive range' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 3)
 
         @return = @query.slice!(1..2)
@@ -2962,7 +2964,7 @@ describe DataMapper::Query do
     end
 
     describe 'with a negative offset' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 2)
 
         @return = @query.slice!(-1)
@@ -2986,7 +2988,7 @@ describe DataMapper::Query do
     end
 
     describe 'with a negative offset and length' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 2)
 
         @return = @query.slice!(-1, 1)
@@ -3010,7 +3012,7 @@ describe DataMapper::Query do
     end
 
     describe 'with a negative range' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 3)
 
         rescue_if 'TODO: update Query#slice! handle negative range' do
@@ -3038,7 +3040,7 @@ describe DataMapper::Query do
     end
 
     describe 'with an offset not within range' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 3)
       end
 
@@ -3050,7 +3052,7 @@ describe DataMapper::Query do
     end
 
     describe 'with an offset and length not within range' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 3)
       end
 
@@ -3062,7 +3064,7 @@ describe DataMapper::Query do
     end
 
     describe 'with a range not within range' do
-      before :all do
+      before :each do
         @query = @query.update(:offset => 1, :limit => 3)
       end
 
@@ -3086,7 +3088,7 @@ describe DataMapper::Query do
 
   describe '#sort_records' do
     supported_by :all do
-      before :all do
+      before :each do
         @john = { 'name' => 'John Doe',  'referrer_name' => nil         }
         @sam  = { 'name' => 'Sam Smoot', 'referrer_name' => nil         }
         @dan  = { 'name' => 'Dan Kubb',  'referrer_name' => 'Sam Smoot' }
@@ -3117,7 +3119,7 @@ describe DataMapper::Query do
 
     describe "##{method}" do
       supported_by :all do
-        before :all do
+        before :each do
           @key = @model.key(@repository.name)
 
           @self_relationship = DataMapper::Associations::OneToMany::Relationship.new(
@@ -3266,7 +3268,7 @@ describe DataMapper::Query do
         end
 
         describe 'with self having links' do
-          before :all do
+          before :each do
             @do_adapter = defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
           end
 
@@ -3290,7 +3292,7 @@ describe DataMapper::Query do
         end
 
         describe 'with other having links' do
-          before :all do
+          before :each do
             @do_adapter = defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
           end
 
@@ -3461,7 +3463,7 @@ describe DataMapper::Query do
 
   describe '#unique?' do
     describe 'when the query is unique' do
-      before :all do
+      before :each do
         @query.update(:unique => true)
       end
 
@@ -3473,7 +3475,7 @@ describe DataMapper::Query do
     end
 
     describe 'when links are provided, but unique is not specified' do
-      before :all do
+      before :each do
         @query.should_not be_unique
         @query.update(:links => [ :referrer ])
       end
@@ -3482,7 +3484,7 @@ describe DataMapper::Query do
     end
 
     describe 'when links are provided, but unique is false' do
-      before :all do
+      before :each do
         @query.should_not be_unique
         @query.update(:links => [ :referrer ], :unique => false)
       end
@@ -3496,7 +3498,7 @@ describe DataMapper::Query do
   describe '#update' do
     describe 'with a Query' do
       describe 'that is equivalent' do
-        before :all do
+        before :each do
           @other = DataMapper::Query.new(@repository, @model, @options)
 
           @return = @query.update(@other)
@@ -3508,7 +3510,7 @@ describe DataMapper::Query do
       end
 
       describe 'that has conditions set' do
-        before :all do
+        before :each do
           @and_operation = DataMapper::Query::Conditions::Operation.new(:and)
           @or_operation  = DataMapper::Query::Conditions::Operation.new(:or)
 
@@ -3528,7 +3530,7 @@ describe DataMapper::Query do
       end
 
       describe 'that is for an ancestor model' do
-        before :all do
+        before :each do
           class ::Contact < User; end
 
           @query    = DataMapper::Query.new(@repository, Contact, @options)
@@ -3553,7 +3555,7 @@ describe DataMapper::Query do
       end
 
       describe 'using a different model' do
-        before :all do
+        before :each do
           class ::Clone
             include DataMapper::Resource
 
@@ -3569,7 +3571,7 @@ describe DataMapper::Query do
       end
 
       describe 'using different options' do
-        before :all do
+        before :each do
           @other = DataMapper::Query.new(@repository, @model, @options.update(@other_options))
 
           @return = @query.update(@other)
@@ -3617,7 +3619,7 @@ describe DataMapper::Query do
       end
 
       describe 'using extra options' do
-        before :all do
+        before :each do
           @options.update(:name => 'Dan Kubb')
           @other = DataMapper::Query.new(@repository, @model, @options)
 
@@ -3644,7 +3646,7 @@ describe DataMapper::Query do
 
     describe 'with a Hash' do
       describe 'that is empty' do
-        before :all do
+        before :each do
           @copy = @query.dup
           @return = @query.update({})
         end
@@ -3659,7 +3661,7 @@ describe DataMapper::Query do
       end
 
       describe 'using different options' do
-        before :all do
+        before :each do
           @return = @query.update(@other_options)
         end
 
@@ -3705,7 +3707,7 @@ describe DataMapper::Query do
       end
 
       describe 'using extra options' do
-        before :all do
+        before :each do
           @options = { :name => 'Dan Kubb' }
 
           @return = @query.update(@options)
@@ -3728,7 +3730,7 @@ describe DataMapper::Query do
       end
 
       describe 'using raw conditions' do
-        before :all do
+        before :each do
           @query.update(:conditions => [ 'name IS NOT NULL' ])
 
           @return = @query.update(:conditions => [ 'name = ?', 'Dan Kubb' ])
@@ -3748,7 +3750,7 @@ describe DataMapper::Query do
       end
 
       describe 'with the String key mapping to a Query::Path' do
-        before :all do
+        before :each do
           @query.links.should be_empty
 
           @options = { 'grandparents.name' => 'Dan Kubb' }

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Serial do
-  before :all do
+  before :each do
     @name          = :id
     @type          = described_class
     @primitive     = Integer
@@ -10,7 +10,7 @@ describe DataMapper::Property::Serial do
     @invalid_value = 'foo'
   end
 
-  it_should_behave_like 'A public Property'
+  include_examples 'A public Property'
 
   describe '.options' do
     subject { described_class.options }

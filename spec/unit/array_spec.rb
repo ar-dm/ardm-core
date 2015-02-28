@@ -3,12 +3,12 @@ require 'dm-core/support/ext/array'
 require 'dm-core/support/mash'
 
 describe DataMapper::Ext::Array do
-  before :all do
+  before :each do
     @array = [ [ :a, [ 1 ] ], [ :b, [ 2 ] ], [ :c, [ 3 ] ] ].freeze
   end
 
   describe '.to_mash' do
-    before :all do
+    before :each do
       @return = DataMapper::Ext::Array.to_mash(@array)
     end
 

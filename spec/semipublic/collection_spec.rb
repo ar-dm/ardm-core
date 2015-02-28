@@ -23,7 +23,7 @@ require 'spec_helper'
     end
 
     supported_by :all do
-      before :all do
+      before :each do
         @article_repository = @repository
         @articles_query     = DataMapper::Query.new(@article_repository, @article_model, :title => 'Sample Article')
 
@@ -38,7 +38,7 @@ require 'spec_helper'
 
       describe '.new' do
         describe 'with resources' do
-          before :all do
+          before :each do
             @return = @collection = DataMapper::Collection.new(@articles_query, [ @article ])
           end
 
@@ -56,7 +56,7 @@ require 'spec_helper'
         end
 
         describe 'with no resources' do
-          before :all do
+          before :each do
             @return = @collection = DataMapper::Collection.new(@articles_query)
           end
 
@@ -77,7 +77,7 @@ require 'spec_helper'
       it { @articles.should respond_to(:query) }
 
       describe '#query' do
-        before :all do
+        before :each do
           @return = @articles.query
         end
 
@@ -93,7 +93,7 @@ require 'spec_helper'
       it { @articles.should respond_to(:repository) }
 
       describe '#repository' do
-        before :all do
+        before :each do
           @return = @repository = @articles.repository
         end
 

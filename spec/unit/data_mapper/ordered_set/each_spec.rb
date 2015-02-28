@@ -5,7 +5,7 @@ require 'unit/data_mapper/ordered_set/shared/each_spec'
 describe 'DataMapper::OrderedSet' do
   subject { DataMapper::OrderedSet.new }
 
-  it_should_behave_like 'DataMapper::OrderedSet'
+  include_examples 'DataMapper::OrderedSet'
 end
 
 describe 'DataMapper::OrderedSet#each' do
@@ -15,5 +15,5 @@ describe 'DataMapper::OrderedSet#each' do
   let(:entry)  { 1                                     }
   let(:yields) { []                                    }
 
-  it_should_behave_like 'DataMapper::OrderedSet#each'
+  include_examples 'DataMapper::OrderedSet#each'
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::DateTime do
-  before :all do
+  before :each do
     @name          = :created_at
     @type          = described_class
     @primitive     = DateTime
@@ -10,7 +10,7 @@ describe DataMapper::Property::DateTime do
     @invalid_value = 1
   end
 
-  it_should_behave_like 'A public Property'
+  include_examples 'A public Property'
 
   describe '.options' do
     subject { described_class.options }

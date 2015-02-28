@@ -69,14 +69,14 @@ describe DataMapper::Resource do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       user = @user_model.create(:name => 'dbussink', :age => 25, :description => 'Test')
 
       @user = @user_model.get!(*user.key)
     end
 
-    it_should_behave_like 'A public Resource'
-    it_should_behave_like 'A Resource supporting Strategic Eager Loading'
+    include_examples 'A public Resource'
+    include_examples 'A Resource supporting Strategic Eager Loading'
 
     it 'A resource should respond to raise_on_save_failure' do
       @user.should respond_to(:raise_on_save_failure)
@@ -183,24 +183,22 @@ describe DataMapper::Resource do
 
     [ :update, :update! ].each do |method|
       describe 'with attributes where one is a foreign key' do
-        before :all do
-          rescue_if @skip do
-            @dkubb = @user.referrer = @user_model.create(:name => 'dkubb', :age => 33)
-            @user.save
-            @user = @user_model.get!(*@user.key)
-            @user.referrer.should == @dkubb
+        before :each do
+          @dkubb = @user.referrer = @user_model.create(:name => 'dkubb', :age => 33)
+          @user.save
+          @user = @user_model.get!(*@user.key)
+          @user.referrer.should == @dkubb
 
-            @solnic = @user_model.create(:name => 'solnic', :age => 28)
+          @solnic = @user_model.create(:name => 'solnic', :age => 28)
 
-            @attributes = {}
+          @attributes = {}
 
-            relationship = @user_model.relationships[:referrer]
-            relationship.child_key.to_a.each_with_index do |k, i|
-              @attributes[k.name] = relationship.parent_key.to_a[i].get!(@solnic)
-            end
-
-            @return = @user.__send__(method, @attributes)
+          relationship = @user_model.relationships[:referrer]
+          relationship.child_key.to_a.each_with_index do |k, i|
+            @attributes[k.name] = relationship.parent_key.to_a[i].get!(@solnic)
           end
+
+          @return = @user.__send__(method, @attributes)
         end
 
         it 'should return true' do

@@ -1,6 +1,6 @@
 require 'pathname'
 require 'rubygems'
-require 'spec'
+require 'rspec'
 require 'dm-core/spec/setup'
 
 ENV['ADAPTER'] ||= 'in_memory'
@@ -11,7 +11,7 @@ LIB_ROOT  = SPEC_ROOT.parent + 'lib'
 Pathname.glob((LIB_ROOT  + 'dm-core/spec/**/*.rb'          ).to_s).each { |file| require file }
 Pathname.glob((SPEC_ROOT + '{lib,support,*/shared}/**/*.rb').to_s).each { |file| require file }
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
 
   config.extend( DataMapper::Spec::Adapters::Helpers)
   config.include(DataMapper::Spec::PendingHelpers)
@@ -31,7 +31,7 @@ Spec::Runner.configure do |config|
     # When the object ivars are explicitly removed, this causes weird
     # problems when rspec uses it (!).  Why rspec does this I have no
     # idea because I cannot determine the intention from the code.
-    DataMapper::Spec.remove_ivars(Spec::Matchers.last_matcher, %w[ @expected ])
+    DataMapper::Spec.remove_ivars(RSpec::Matchers.last_matcher, %w[ @expected ])
   end
 
 end

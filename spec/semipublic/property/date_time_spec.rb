@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::DateTime do
-  before :all do
+  before :each do
     @name          = :created_at
     @type          = described_class
     @value         = DateTime.now
@@ -9,7 +9,7 @@ describe DataMapper::Property::DateTime do
     @invalid_value = 1
   end
 
-  it_should_behave_like 'A semipublic Property'
+  include_examples 'A semipublic Property'
 
   describe '#typecast_to_primitive' do
     describe 'and value given as a hash with keys like :year, :month, etc' do

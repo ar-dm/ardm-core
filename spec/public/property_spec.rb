@@ -67,7 +67,7 @@ describe DataMapper::Property do
     end
 
     describe '#get!' do
-      before :all do
+      before :each do
         @image = Image.new
 
         # now some dark Ruby magic
@@ -102,7 +102,7 @@ describe DataMapper::Property do
     end
 
     describe '#inspect' do
-      before :all do
+      before :each do
         @str = Track.properties[:title].inspect
       end
 
@@ -249,7 +249,7 @@ describe DataMapper::Property do
     end
 
     describe '#set' do
-      before :all do
+      before :each do
         # keep in mind we must run these examples with a
         # saved model instance
         @image = Image.create(
@@ -270,7 +270,7 @@ describe DataMapper::Property do
     end
 
     describe '#set!' do
-      before :all do
+      before :each do
         @image = Image.new(:md5hash      => '5268f0f3f452844c79843e820f998869',
                            :title       => 'Rome at the sunset',
                            :description => 'Just wow')

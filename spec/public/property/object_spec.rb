@@ -104,7 +104,7 @@ describe DataMapper::Property, 'Object type' do
 
   describe 'persistable' do
     supported_by :all do
-      before :all do
+      before :each do
         @resource = @model.create(:title => 'Test', :meta => { 'lang' => 'en_CA' })
       end
 

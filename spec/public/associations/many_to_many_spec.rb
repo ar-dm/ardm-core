@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-share_examples_for 'A Limited Many to Many Collection' do
+RSpec.shared_examples_for 'A Limited Many to Many Collection' do
   describe '#destroy!' do
     describe 'on a limited collection' do
-      before :all do
+      before :each do
         @other   = @articles.create
         @limited = @articles.all(:limit => 1)
 
@@ -25,7 +25,7 @@ end
     self.loaded = loaded
 
     # define the model prior to supported_by
-    before :all do
+    before :each do
       module ::Blog
         class Author
           include DataMapper::Resource
@@ -73,7 +73,7 @@ end
     end
 
     supported_by :all do
-      before :all do
+      before :each do
         @author = @author_model.create(:name => 'Dan Kubb')
 
         @original = @author.articles.create(:title => 'Original Article')
@@ -91,12 +91,12 @@ end
         @articles.entries if loaded
       end
 
-      it_should_behave_like 'A public Collection'
-      it_should_behave_like 'A public Association Collection'
-      it_should_behave_like 'A Collection supporting Strategic Eager Loading' unless loaded
-      it_should_behave_like 'Finder Interface'
-      it_should_behave_like 'Collection Finder Interface'
-      it_should_behave_like 'A Limited Many to Many Collection'
+      include_examples 'A public Collection'
+      include_examples 'A public Association Collection'
+      include_examples 'A Collection supporting Strategic Eager Loading' unless loaded
+      include_examples 'Finder Interface'
+      include_examples 'Collection Finder Interface'
+      include_examples 'A Limited Many to Many Collection'
     end
   end
 
@@ -164,7 +164,7 @@ end
     end
 
     supported_by :all do
-      before :all do
+      before :each do
         @author = @author_model.create(:name => 'Dan Kubb')
 
         @original_site = @author.sites.create(:name => 'original')
@@ -186,12 +186,12 @@ end
         @articles.entries if loaded
       end
 
-      it_should_behave_like 'A public Collection'
-      it_should_behave_like 'A public Association Collection'
-      it_should_behave_like 'A Collection supporting Strategic Eager Loading' unless loaded
-      it_should_behave_like 'Finder Interface'
-      it_should_behave_like 'Collection Finder Interface'
-      it_should_behave_like 'A Limited Many to Many Collection'
+      include_examples 'A public Collection'
+      include_examples 'A public Association Collection'
+      include_examples 'A Collection supporting Strategic Eager Loading' unless loaded
+      include_examples 'Finder Interface'
+      include_examples 'Collection Finder Interface'
+      include_examples 'A Limited Many to Many Collection'
     end
   end
 end

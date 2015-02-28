@@ -1,14 +1,16 @@
-share_examples_for 'A semipublic Property' do
+RSpec.shared_examples_for 'A semipublic Property' do
   before :all do
-    %w[ @type @name @value @other_value ].each do |ivar|
-      raise "+#{ivar}+ should be defined in before block" unless instance_variable_defined?(ivar)
-    end
-
     module ::Blog
       class Article
         include DataMapper::Resource
         property :id, Serial
       end
+    end
+  end
+
+  before do
+    %w[ @type @name @value @other_value ].each do |ivar|
+      raise "+#{ivar}+ should be defined in before block" unless instance_variable_defined?(ivar)
     end
 
     @model      = Blog::Article
@@ -38,7 +40,7 @@ share_examples_for 'A semipublic Property' do
     [ :index, :unique_index, :unique, :lazy ].each do |attribute|
       [ true, false, :title, [ :title ] ].each do |value|
         describe "when provided #{(options = { attribute => value }).inspect}" do
-          before :all do
+          before do
             @property = @type.new(@model, @name, @options.merge(options))
           end
 

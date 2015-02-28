@@ -22,14 +22,14 @@ describe 'DataMapper::SubjectSet#size' do
   context 'when no entry is present' do
     let(:set) { DataMapper::SubjectSet.new }
 
-    it_should_behave_like 'DataMapper::SubjectSet#size when no entry is present'
+    include_examples 'DataMapper::SubjectSet#size when no entry is present'
   end
 
   context 'when 1 entry is present' do
     let(:set)     { DataMapper::SubjectSet.new(entries) }
     let(:entries) { [ entry1 ]                          }
 
-    it_should_behave_like 'DataMapper::SubjectSet#size when 1 entry is present'
+    include_examples 'DataMapper::SubjectSet#size when 1 entry is present'
   end
 
   context 'when more than 1 entry is present' do
@@ -37,6 +37,6 @@ describe 'DataMapper::SubjectSet#size' do
     let(:entries)       { [ entry1, entry2 ]                  }
     let(:expected_size) { entries.size                        }
 
-    it_should_behave_like 'DataMapper::SubjectSet#size when more than 1 entry is present'
+    include_examples 'DataMapper::SubjectSet#size when more than 1 entry is present'
   end
 end

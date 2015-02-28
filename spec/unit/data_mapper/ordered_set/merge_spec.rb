@@ -10,7 +10,7 @@ describe 'DataMapper::OrderedSet#merge' do
     let(:ordered_set) { set                        }
     let(:set)         { DataMapper::OrderedSet.new }
 
-    it_should_behave_like 'DataMapper::OrderedSet#merge when merging two empty sets'
+    include_examples 'DataMapper::OrderedSet#merge when merging two empty sets'
   end
 
   context 'when merging a set with already present entries' do
@@ -20,7 +20,7 @@ describe 'DataMapper::OrderedSet#merge' do
     let(:set)         { DataMapper::OrderedSet.new([ entry ]) }
     let(:entry)       { 1                                     }
 
-    it_should_behave_like 'DataMapper::OrderedSet#merge when merging a set with already present entries'
+    include_examples 'DataMapper::OrderedSet#merge when merging a set with already present entries'
   end
 
   context 'when merging a set with not yet present entries' do
@@ -31,6 +31,6 @@ describe 'DataMapper::OrderedSet#merge' do
     let(:entry1)      { 1                                      }
     let(:entry2)      { 2                                      }
 
-    it_should_behave_like 'DataMapper::OrderedSet#merge when merging a set with not yet present entries'
+    include_examples 'DataMapper::OrderedSet#merge when merging a set with not yet present entries'
   end
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Property::Float do
-  before :all do
+  before :each do
     @name          = :rating
     @type          = described_class
     @value         = 0.1
@@ -9,7 +9,7 @@ describe DataMapper::Property::Float do
     @invalid_value = '1'
   end
 
-  it_should_behave_like 'A semipublic Property'
+  include_examples 'A semipublic Property'
 
   describe '#typecast_to_primitive' do
     it 'returns same value if a float' do

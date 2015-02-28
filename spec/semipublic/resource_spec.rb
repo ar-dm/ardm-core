@@ -14,10 +14,10 @@ describe DataMapper::Resource do
   end
 
   supported_by :all do
-    before :all do
+    before :each do
       @user = @user_model.create(:name => 'dbussink', :age => 25, :description => "Test")
     end
 
-    it_should_behave_like 'A semipublic Resource'
+    include_examples 'A semipublic Resource'
   end
 end

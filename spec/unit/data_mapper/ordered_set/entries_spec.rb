@@ -10,13 +10,13 @@ describe 'DataMapper::OrderedSet#entries' do
   context 'with no entries' do
     let(:set) { DataMapper::OrderedSet.new }
 
-    it_should_behave_like 'DataMapper::OrderedSet#entries with no entries'
+    include_examples 'DataMapper::OrderedSet#entries with no entries'
   end
 
   context 'with entries' do
     let(:set)   { DataMapper::OrderedSet.new([ entry ]) }
     let(:entry) { 1                                     }
 
-    it_should_behave_like 'DataMapper::OrderedSet#entries with entries'
+    include_examples 'DataMapper::OrderedSet#entries with entries'
   end
 end

@@ -23,12 +23,12 @@ describe 'DataMapper::SubjectSet#to_ary' do
   context 'when no entries are present' do
     let(:entries) { [] }
 
-    it_should_behave_like 'DataMapper::SubjectSet#to_ary when no entries are present'
+    include_examples 'DataMapper::SubjectSet#to_ary when no entries are present'
   end
 
   context 'when entries are present' do
     let(:entries) { [ entry1, entry2 ] }
 
-    it_should_behave_like 'DataMapper::SubjectSet#to_ary when entries are present'
+    include_examples 'DataMapper::SubjectSet#to_ary when entries are present'
   end
 end
