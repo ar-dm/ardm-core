@@ -21,7 +21,9 @@ module DataMapper
         def commit
           set_child_keys
           set_default_values
-          return self unless valid_attributes?
+          unless valid_attributes?
+            raise PersistenceError, "Invalid value for #{invalid_attributes.map { |_, p| p.name }.join(",")}"
+          end
           create_resource
           set_repository
           add_to_identity_map
@@ -83,6 +85,15 @@ module DataMapper
             value = get(property)
             property.serial? && value.nil? || property.valid?(value)
           end
+        end
+
+        def invalid_attributes
+          properties.map do |property|
+            value = get(property)
+            unless property.serial? && value.nil? || property.valid?(value)
+              [value, property]
+            end
+          end.compact
         end
 
       end # class Transient

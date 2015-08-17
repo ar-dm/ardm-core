@@ -789,15 +789,19 @@ share_examples_for 'A public Resource' do
       describe 'on a new, invalid resource' do
         before :all do
           @user = @user_model.new(:name => nil)
-          @return = @user.__send__(method)
         end
 
         it 'should return false' do
-          @return.should be(false)
+          lambda {
+            @user.__send__(method)
+          }.should raise_error(DataMapper::PersistenceError) { |e|
+            e.message.should match("Invalid value for name")
+          }
         end
 
         it 'should call save hook expected number of times' do
-          @user.save_hook_call_count.should == (method == :save ? 1 : nil)
+          @user.__send__(method) rescue nil
+          @user.save_hook_call_count.should == (method == :save ? 2 : nil)
         end
       end
 
